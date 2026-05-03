@@ -6,6 +6,10 @@
   <a href="https://russellenvy.github.io/three-man-team/">russellenvy.github.io/three-man-team</a>
 </p>
 
+<p align="center">
+  By <a href="https://russellenvy.com">Russell Aaron</a>
+</p>
+
 ---
 
 ## The Problem With AI Coding Tools
