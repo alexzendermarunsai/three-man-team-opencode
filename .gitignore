@@ -14,3 +14,7 @@ INTERNAL-BRIEF.md
 
 # Override global gitignore — docs/ is intentionally tracked (GitHub Pages)
 !docs
+
+# Override global *.json ignore — releases/ must be tracked
+!releases/
+!releases/*.json
