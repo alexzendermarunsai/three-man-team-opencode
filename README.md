@@ -12,6 +12,15 @@
 
 ---
 
+## What's New — v1.2.4
+
+- Fixed: version check was silently broken for all v1.2.3 installs ([#8](https://github.com/russelleNVy/three-man-team/issues/8))
+- Fixed: typo in Bob spinup prompt (BOB.md → BUILDER.md)
+
+See [all releases →](https://github.com/russelleNVy/three-man-team/releases)
+
+---
+
 ## The Problem With AI Coding Tools
 
 AI coding tools are powerful but undisciplined. They read entire codebases when they
@@ -148,7 +157,13 @@ See `docs/token-optimization.md` for the full discipline.
 
 ## Auto-Update
 
-Arch checks the GitHub releases API at the start of every session. If a newer version is available, it tells you before doing anything else. See [releases](https://github.com/russelleNVy/three-man-team/releases) for what's changed.
+Arch checks the GitHub releases API at the start of every session. If a newer version is available, it tells you before doing anything else:
+
+> "Three Man Team v1.2.4 is available — you're on v1.2.3. Before we get into today's work, let me walk you through what changed."
+
+Arch walks you through each change in plain language and guides you through any updates your project needs. You decide what to apply and when.
+
+See [releases](https://github.com/russelleNVy/three-man-team/releases) for what's changed.
 
 ---
 
