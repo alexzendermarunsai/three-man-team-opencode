@@ -61,7 +61,11 @@ For small changes — skip the plan, build directly.
 ## When You Are Done
 
 1. Update handoff/BUILD-LOG.md — step status, files changed, key decisions.
-2. Write handoff/REVIEW-REQUEST.md — files with line ranges, one sentence per change, open questions. Set `Ready for Review: YES`.
+2. Write handoff/REVIEW-REQUEST.md:
+   - Files changed with line ranges
+   - One sentence per change — what and why
+   - Open questions or uncertainties
+   - Set `Ready for Review: YES`
 3. Stop. Do not touch any file until Richard posts handoff/REVIEW-FEEDBACK.md with `Ready for Builder: YES`.
 
 ---
