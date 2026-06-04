@@ -1,66 +1,51 @@
 {
   "version": "1.2.5",
   "released": "2026-06-04",
-  "from_version": "1.2.4",
+  "arch_opening": "I see version {version} of Three Man Team is available. Before we get into today's work, I want to check two things that may be silently broken in your setup — and one upgrade worth having. I'll look at your actual files and tell you exactly what applies to you. This will take a few minutes.",
   "changes": [
     {
-      "affected_files": ["ARCHITECT.md"],
-      "what_changed": "Fixed RICHARD.md reference in Richard spinup prompt — corrected to REVIEWER.md.",
-      "old_behavior": "Arch's spinup prompt told Richard to read RICHARD.md, which does not exist. Richard would fail to load his role file.",
-      "new_behavior": "Spinup prompt correctly references REVIEWER.md.",
-      "user_impact": "Existing installs must update the Richard spinup line in ARCHITECT.md. Find 'Then read RICHARD.md' and change it to 'Then read REVIEWER.md'.",
-      "user_impact_plain": "There was a typo in the instructions Arch gives Richard when spinning him up. Richard was told to read a file that doesn't exist. One-word fix in your ARCHITECT.md.",
-      "migration_required": true,
-      "migration_steps": [
-        "Open ARCHITECT.md in your project root.",
-        "Find the Briefing Richard section. Look for the line: 'Then read RICHARD.md, then handoff/REVIEW-REQUEST.md'.",
-        "Change RICHARD.md to REVIEWER.md.",
-        "Save the file."
-      ],
-      "breaking": true
+      "id": "reviewer-filename-fix",
+      "type": "bug",
+      "title": "Reviewer spinup references wrong filename",
+      "what_changed": "The line Arch uses to spin up the Reviewer referenced RICHARD.md — a file that has never existed. Corrected to REVIEWER.md in the default templates.",
+      "old_behavior": "Arch told the Reviewer to read RICHARD.md at session start.",
+      "new_behavior": "Arch tells the Reviewer to read REVIEWER.md — or whatever the user has named their reviewer role file.",
+      "user_impact_plain": "If your Reviewer is failing to load their role file, this is why. One-word fix — but only if it applies to your setup.",
+      "how_to_assess": "Read the user's Architect role file. Find the section where the Reviewer agent is spun up — it follows the line about Builder signaling done. Look at the 'Then read X.md' instruction. Check whether that file actually exists in the project root. If it does not exist, this bug applies. If it does exist under a custom name the user chose, they are fine.",
+      "user_decision": "Does the file your Reviewer is told to read actually exist in your project? If not, what is the correct filename for your reviewer role?"
     },
     {
-      "affected_files": ["ARCHITECT.md"],
-      "what_changed": "Fixed BOB.md reference in Bob spinup prompt for users who installed from the root-level template — corrected to BUILDER.md. The v1.2.4 fix only reached one template path.",
-      "old_behavior": "Some installs still had 'Then read BOB.md' in the Bob spinup prompt depending on which template they installed from.",
-      "new_behavior": "Spinup prompt correctly references BUILDER.md across all install paths.",
-      "user_impact": "If you applied the v1.2.4 migration, check your ARCHITECT.md — if it still says BOB.md, apply the same fix: change it to BUILDER.md.",
-      "user_impact_plain": "The BOB.md fix from v1.2.4 didn't reach all install paths. If Bob is still failing to load his role file, this is why. Same one-word fix.",
-      "migration_required": true,
-      "migration_steps": [
-        "Open ARCHITECT.md in your project root.",
-        "Find the Briefing Bob section. Look for 'Then read BOB.md'.",
-        "If it still says BOB.md, change it to BUILDER.md.",
-        "If it already says BUILDER.md, no action needed."
-      ],
-      "breaking": true
+      "id": "builder-filename-fix",
+      "type": "bug",
+      "title": "Builder spinup references wrong filename",
+      "what_changed": "The line Arch uses to spin up Builder referenced BOB.md in some install paths. The v1.2.4 fix only reached one template. Corrected across all paths.",
+      "old_behavior": "Arch told Builder to read BOB.md at session start in some installs.",
+      "new_behavior": "Arch tells Builder to read BUILDER.md — or whatever the user has named their builder role file.",
+      "user_impact_plain": "If you applied the v1.2.4 fix, you may already be good. Worth checking — if Builder is failing to load their role file, this is why.",
+      "how_to_assess": "Read the user's Architect role file. Find the section where Builder is spun up. Look at the 'Then read X.md' instruction. Check whether that file actually exists in the project root. If it does not exist, this bug applies. If the user already fixed this after v1.2.4 or has a custom name, they are fine.",
+      "user_decision": "Does the file your Builder is told to read actually exist in your project? If not, what is the correct filename for your builder role?"
     },
     {
-      "affected_files": ["ARCHITECT.md"],
-      "what_changed": "Version check upgraded to full procedure — tracks version_notified, fetches release notes, walks migration steps conversationally. Replaces the simplified ping-and-link version.",
-      "old_behavior": "Version check pinged the API, compared to local VERSION, and dropped a link. No tracking, no migration walkthrough.",
-      "new_behavior": "Full procedure: reads version_notified from SESSION-CHECKPOINT.md, skips if already notified, fetches releases JSON if newer version found, walks Project Owner through changes and migration steps one at a time.",
-      "user_impact": "Replace the version check step in your ARCHITECT.md Session Start with the updated procedure from the latest template.",
-      "user_impact_plain": "The version check now actually walks you through updates instead of just dropping a link. Worth updating — this is what makes the whole system useful.",
-      "migration_required": true,
-      "migration_steps": [
-        "Open ARCHITECT.md in your project root.",
-        "Find the Session Start section. Replace steps 1 and 2 with the updated version from the latest ARCHITECT.md template at https://github.com/russelleNVy/three-man-team/blob/main/templates/project-folder/ARCHITECT.md.",
-        "Save the file."
-      ],
-      "breaking": false
+      "id": "version-check-upgrade",
+      "type": "improvement",
+      "title": "Version check upgraded to full procedure",
+      "what_changed": "The version check in Session Start was a simplified ping-and-link. Upgraded to the full procedure: tracks version_notified in SESSION-CHECKPOINT.md, skips silently if already notified, fetches the release JSON and walks migration steps conversationally.",
+      "old_behavior": "Version check pinged the API, compared to local VERSION, and printed a link to the releases page. No tracking, no walkthrough.",
+      "new_behavior": "Full procedure: reads version_notified, skips if current, fetches release JSON if newer, walks the Project Owner through changes at their pace.",
+      "user_impact_plain": "The version check now actually guides you through updates instead of dropping a link. This is what makes the whole system useful going forward.",
+      "how_to_assess": "Read the user's Architect role file Session Start section. Find the version check step. Does it reference version_notified and SESSION-CHECKPOINT.md? If it just pings the API and prints a link, the full procedure is not in place. If the user has a custom version check they prefer, ask before suggesting a change.",
+      "user_decision": "Would you like to upgrade your version check to the full procedure? It will track what you have been notified about and walk you through future updates conversationally."
     },
     {
-      "affected_files": ["ARCHITECT.md", "BUILDER.md", "REVIEWER.md", "CLAUDE.md"],
-      "what_changed": "Quality improvements across all role files — clearer Job 1 guidance in ARCHITECT.md, explicit REVIEW-REQUEST.md format in BUILDER.md, simplified section title in REVIEWER.md, removed redundant handoff file list from CLAUDE.md.",
-      "old_behavior": "Minor clarity gaps and redundant content across the role files.",
+      "id": "template-improvements",
+      "type": "improvement",
+      "title": "Role file improvements across the board",
+      "what_changed": "ARCHITECT.md Job 1 now documents Diagnose vs Direction modes. BUILDER.md REVIEW-REQUEST format is explicit with sub-bullets. REVIEWER.md section title simplified. CLAUDE.md redundant handoff list removed.",
+      "old_behavior": "Minor clarity gaps and redundant content in the role files.",
       "new_behavior": "Tighter instructions, less redundancy, no behavior change.",
-      "user_impact": "No migration required. Pick up the improvements by copying the updated templates into your project if you want them.",
-      "user_impact_plain": "Minor wording improvements across the role files. Nothing breaks if you stay on your current versions.",
-      "migration_required": false,
-      "migration_steps": [],
-      "breaking": false
+      "user_impact_plain": "Quality improvements — nothing breaks if you stay on your current versions. Worth picking up if you are doing a refresh.",
+      "how_to_assess": "Ask the user if they want a summary of the wording improvements. Only go through these if they express interest — they are cosmetic, not functional.",
+      "user_decision": "Would you like a summary of the wording improvements in this release? They are optional and nothing breaks without them."
     }
-  ],
-  "arch_opening": "I see version {version} of Three Man Team is available. There are two bugs that may be silently breaking Richard and possibly Bob — both are one-word fixes in your ARCHITECT.md. There is also an upgrade to the version check itself. I want to walk you through it before we get into today's work."
+  ]
 }
