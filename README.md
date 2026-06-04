@@ -35,9 +35,10 @@ Three Man Team gives you three agents with distinct jobs, clear handoffs, and ru
 
 ## Why Three Agents
 
-DeepMind's multi-agent research shows teams of 3-5 with structured artifact handoffs
-outperform both solo agents and larger groups. Three is not arbitrary — it is the
-minimum for meaningful review and the maximum before coordination overhead eats the gain.
+Three is not arbitrary. Solo agents drift — there's no one to catch a wrong turn. Large
+teams generate coordination overhead that eats the productivity gain. Three is the minimum
+for meaningful review and the maximum before the team starts managing itself instead of
+the work.
 
 The roles map to how real software ships:
 - Someone who understands the whole system and owns the deploy
