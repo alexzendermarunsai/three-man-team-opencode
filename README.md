@@ -12,10 +12,12 @@
 
 ---
 
-## What's New — v1.2.4
+## What's New — v1.2.5
 
-- Fixed: version check was silently broken for all v1.2.3 installs ([#8](https://github.com/russelleNVy/three-man-team/issues/8))
-- Fixed: typo in Bob spinup prompt (BOB.md → BUILDER.md)
+- Fixed: RICHARD.md → REVIEWER.md in Richard spinup prompt ([#9](https://github.com/russelleNVy/three-man-team/issues/9))
+- Fixed: BOB.md → BUILDER.md missed in root-level template (v1.2.4 incomplete)
+- Fixed: version check upgraded to full procedure with migration walkthrough
+- Removed fabricated DeepMind citation — replaced with first-principles reasoning
 
 See [all releases →](https://github.com/russelleNVy/three-man-team/releases)
 
