@@ -1,0 +1,66 @@
+{
+  "version": "1.2.5",
+  "released": "2026-06-04",
+  "from_version": "1.2.4",
+  "changes": [
+    {
+      "affected_files": ["ARCHITECT.md"],
+      "what_changed": "Fixed RICHARD.md reference in Richard spinup prompt — corrected to REVIEWER.md.",
+      "old_behavior": "Arch's spinup prompt told Richard to read RICHARD.md, which does not exist. Richard would fail to load his role file.",
+      "new_behavior": "Spinup prompt correctly references REVIEWER.md.",
+      "user_impact": "Existing installs must update the Richard spinup line in ARCHITECT.md. Find 'Then read RICHARD.md' and change it to 'Then read REVIEWER.md'.",
+      "user_impact_plain": "There was a typo in the instructions Arch gives Richard when spinning him up. Richard was told to read a file that doesn't exist. One-word fix in your ARCHITECT.md.",
+      "migration_required": true,
+      "migration_steps": [
+        "Open ARCHITECT.md in your project root.",
+        "Find the Briefing Richard section. Look for the line: 'Then read RICHARD.md, then handoff/REVIEW-REQUEST.md'.",
+        "Change RICHARD.md to REVIEWER.md.",
+        "Save the file."
+      ],
+      "breaking": true
+    },
+    {
+      "affected_files": ["ARCHITECT.md"],
+      "what_changed": "Fixed BOB.md reference in Bob spinup prompt for users who installed from the root-level template — corrected to BUILDER.md. The v1.2.4 fix only reached one template path.",
+      "old_behavior": "Some installs still had 'Then read BOB.md' in the Bob spinup prompt depending on which template they installed from.",
+      "new_behavior": "Spinup prompt correctly references BUILDER.md across all install paths.",
+      "user_impact": "If you applied the v1.2.4 migration, check your ARCHITECT.md — if it still says BOB.md, apply the same fix: change it to BUILDER.md.",
+      "user_impact_plain": "The BOB.md fix from v1.2.4 didn't reach all install paths. If Bob is still failing to load his role file, this is why. Same one-word fix.",
+      "migration_required": true,
+      "migration_steps": [
+        "Open ARCHITECT.md in your project root.",
+        "Find the Briefing Bob section. Look for 'Then read BOB.md'.",
+        "If it still says BOB.md, change it to BUILDER.md.",
+        "If it already says BUILDER.md, no action needed."
+      ],
+      "breaking": true
+    },
+    {
+      "affected_files": ["ARCHITECT.md"],
+      "what_changed": "Version check upgraded to full procedure — tracks version_notified, fetches release notes, walks migration steps conversationally. Replaces the simplified ping-and-link version.",
+      "old_behavior": "Version check pinged the API, compared to local VERSION, and dropped a link. No tracking, no migration walkthrough.",
+      "new_behavior": "Full procedure: reads version_notified from SESSION-CHECKPOINT.md, skips if already notified, fetches releases JSON if newer version found, walks Project Owner through changes and migration steps one at a time.",
+      "user_impact": "Replace the version check step in your ARCHITECT.md Session Start with the updated procedure from the latest template.",
+      "user_impact_plain": "The version check now actually walks you through updates instead of just dropping a link. Worth updating — this is what makes the whole system useful.",
+      "migration_required": true,
+      "migration_steps": [
+        "Open ARCHITECT.md in your project root.",
+        "Find the Session Start section. Replace steps 1 and 2 with the updated version from the latest ARCHITECT.md template at https://github.com/russelleNVy/three-man-team/blob/main/templates/project-folder/ARCHITECT.md.",
+        "Save the file."
+      ],
+      "breaking": false
+    },
+    {
+      "affected_files": ["ARCHITECT.md", "BUILDER.md", "REVIEWER.md", "CLAUDE.md"],
+      "what_changed": "Quality improvements across all role files — clearer Job 1 guidance in ARCHITECT.md, explicit REVIEW-REQUEST.md format in BUILDER.md, simplified section title in REVIEWER.md, removed redundant handoff file list from CLAUDE.md.",
+      "old_behavior": "Minor clarity gaps and redundant content across the role files.",
+      "new_behavior": "Tighter instructions, less redundancy, no behavior change.",
+      "user_impact": "No migration required. Pick up the improvements by copying the updated templates into your project if you want them.",
+      "user_impact_plain": "Minor wording improvements across the role files. Nothing breaks if you stay on your current versions.",
+      "migration_required": false,
+      "migration_steps": [],
+      "breaking": false
+    }
+  ],
+  "arch_opening": "I see version {version} of Three Man Team is available. There are two bugs that may be silently breaking Richard and possibly Bob — both are one-word fixes in your ARCHITECT.md. There is also an upgrade to the version check itself. I want to walk you through it before we get into today's work."
+}
