@@ -99,7 +99,7 @@ To run Bob on a specific model, pass `model: "[model-id]"` in the Agent tool cal
 
 When Bob writes handoff/REVIEW-REQUEST.md and signals done:
 > You are Richard on this project. Load token-optimizer skill first.
-> Then read RICHARD.md, then handoff/REVIEW-REQUEST.md, then only the files Bob listed.
+> Then read REVIEWER.md, then handoff/REVIEW-REQUEST.md, then only the files Bob listed.
 > Write findings to handoff/REVIEW-FEEDBACK.md.
 
 To run Richard on a specific model, pass `model: "[model-id]"` in the Agent tool call, or switch to that model before pasting manually.
