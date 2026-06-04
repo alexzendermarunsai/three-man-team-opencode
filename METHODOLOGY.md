@@ -19,11 +19,9 @@ The personas in Three Man Team are defaults. Name them, age them, give them a hi
 
 ## Three Is the Right Number
 
-DeepMind's multi-agent scaling research shows that structured teams of 3-5 agents with
-defined artifact handoffs consistently outperform both solo agents and larger teams.
 Solo agents drift. Large teams generate coordination overhead that eats the productivity
-gain. Three is the sweet spot: enough for meaningful review, minimal enough for clean
-handoffs.
+gain. Three is the minimum for meaningful review and the maximum before the team starts
+managing itself instead of the work.
 
 Three Man Team is exactly three agents by design. Resist adding a fourth.
 

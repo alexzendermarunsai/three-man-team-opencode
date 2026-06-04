@@ -12,10 +12,12 @@
 
 ---
 
-## What's New — v1.2.4
+## What's New — v1.2.5
 
-- Fixed: version check was silently broken for all v1.2.3 installs ([#8](https://github.com/russelleNVy/three-man-team/issues/8))
-- Fixed: typo in Bob spinup prompt (BOB.md → BUILDER.md)
+- Fixed: RICHARD.md → REVIEWER.md in Richard spinup prompt ([#9](https://github.com/russelleNVy/three-man-team/issues/9))
+- Fixed: BOB.md → BUILDER.md missed in root-level template (v1.2.4 incomplete)
+- Fixed: version check upgraded to full procedure with migration walkthrough
+- Removed fabricated DeepMind citation — replaced with first-principles reasoning
 
 See [all releases →](https://github.com/russelleNVy/three-man-team/releases)
 
@@ -35,9 +37,10 @@ Three Man Team gives you three agents with distinct jobs, clear handoffs, and ru
 
 ## Why Three Agents
 
-DeepMind's multi-agent research shows teams of 3-5 with structured artifact handoffs
-outperform both solo agents and larger groups. Three is not arbitrary — it is the
-minimum for meaningful review and the maximum before coordination overhead eats the gain.
+Three is not arbitrary. Solo agents drift — there's no one to catch a wrong turn. Large
+teams generate coordination overhead that eats the productivity gain. Three is the minimum
+for meaningful review and the maximum before the team starts managing itself instead of
+the work.
 
 The roles map to how real software ships:
 - Someone who understands the whole system and owns the deploy

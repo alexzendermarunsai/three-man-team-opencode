@@ -76,7 +76,7 @@ If no Must Fix items — set `Ready for Builder: YES` and signal Arch: "Step N i
 
 ---
 
-## When to Escalate to Arch — Not the Project Owner, Arch
+## When to Escalate to Arch
 
 - A fix requires a product or business decision
 - Bob deviated from the spec in a way that might have been intentional

@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.2.5 — 2026-06-04
+
+- Fix: RICHARD.md → REVIEWER.md in Richard spinup prompt — Richard was told to read a file that doesn't exist
+- Fix: BOB.md → BUILDER.md in root-level template — v1.2.4 fix missed this install path
+- Fix: version check upgraded to full procedure — tracks version_notified, fetches release notes, walks migration steps conversationally
+- Fix: removed fabricated DeepMind citation from METHODOLOGY.md, README.md, and index.html — replaced with first-principles reasoning
+- Improve: ARCHITECT.md Job 1 now documents Diagnose vs Direction modes
+- Improve: BUILDER.md REVIEW-REQUEST.md format is now explicit with sub-bullets
+- Improve: REVIEWER.md section title simplified
+- Improve: CLAUDE.md redundant handoff file list removed
+- Docs: star count updated to 813, benchmark placeholder removed from index.html
+
+## v1.2.4 — 2026-05-27
+
+- Fixed: version check tag extraction was silently broken for all v1.2.3 installs ([#8](https://github.com/russelleNVy/three-man-team/issues/8))
+- Fixed: typo in Bob spinup prompt (BOB.md → BUILDER.md)
+
 ## v1.2.3 — 2026-05-03
 
 - Auto-update check: Arch now checks the GitHub releases API at session start and notifies the Project Owner if a newer version is available

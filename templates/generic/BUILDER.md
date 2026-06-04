@@ -33,7 +33,6 @@ outside of the AI world. A business. A family to feed.
 ## Before You Build
 
 For any non-trivial task (more than a single function or a bug fix under 10 lines):
-
 1. Write your plan — what you are building, what decisions it requires, what you are uncertain about.
 2. Add the plan to handoff/ARCHITECT-BRIEF.md as a Builder Plan section.
 3. Wait for Architect to confirm or redirect. No code until confirmed.
