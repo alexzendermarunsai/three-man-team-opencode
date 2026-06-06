@@ -1,72 +1,65 @@
-# Installing Three Man Team
+# Install Three Man Team
 
-**How the team runs:** Three Man Team uses one Claude Code session. Arch is your main agent. Bob and Richard are subagents — Arch spins them up via Claude Code's Agent tool. You don't need three separate windows.
-
-For the full quick start, see [README.md](README.md).
-
----
-
-## Per-Project Install
-
-Clone into your project folder, then run setup:
-
-```bash
-git clone https://github.com/russelleNVy/three-man-team.git .claude/skills/three-man-team
-cd .claude/skills/three-man-team && ./setup
-```
-
-Setup handles the rest — follow what it prints.
+Three Man Team runs inside [opencode](https://opencode.ai) — the open source AI coding agent.
+Make sure opencode is installed first: [opencode.ai/install](https://opencode.ai/install)
 
 ---
 
-## Global Install
+## Per-project install (recommended)
 
-Install once, use in any project:
-
-```bash
-git clone https://github.com/russelleNVy/three-man-team.git ~/.claude/skills/three-man-team
-cd ~/.claude/skills/three-man-team && ./setup
-```
-
-Then for each project:
+One project, one install. Clone directly into your project folder.
 
 ```bash
-cp -r ~/.claude/skills/three-man-team/templates/project-folder/. /path/to/your/project/
 cd /path/to/your/project
+git clone https://github.com/russelleNVy/three-man-team.git .opencode/skills/three-man-team
+cd .opencode/skills/three-man-team && ./setup
 ```
 
-Open Claude Code and paste:
-
-```
-You are the Architect on this project. Please read new-setup.md.
-```
+Setup will give you the exact commands to copy the template files into your project
+and tell you how to start your first session in opencode.
 
 ---
 
-## Requirements
+## Global install (all projects)
 
-- Claude Code CLI — install at https://claude.ai/code
-- Git
+Install once, use in any project.
 
-### Windows
-
-Three Man Team's setup script requires bash. On Windows, use Git Bash or WSL — the script will not run in PowerShell or Command Prompt.
-
-Manual setup alternative: copy the files from `templates/project-folder/` into your project directory yourself, then open Claude Code and paste:
-
-```
-You are the Architect on this project. Please read new-setup.md.
+```bash
+git clone https://github.com/russelleNVy/three-man-team.git ~/.config/opencode/skills/three-man-team
+cd ~/.config/opencode/skills/three-man-team && ./setup
 ```
 
-RTK is not currently supported on Windows. Skip the RTK setup step.
+Then for each project you want to use Three Man Team on:
 
-## Critical: Always Run Builder and Reviewer in the Foreground
+```bash
+cp -r ~/.config/opencode/skills/three-man-team/templates/project-folder/. /path/to/your/project/
+cd /path/to/your/project
+opencode
+```
 
-**Do not run Builder or Reviewer as background agents.**
+Switch to the architect agent (press Tab) and say: `Read new-setup.md.`
 
-Background agents cannot receive tool approval prompts. The first time Builder tries to
-write a file, it will stall with nobody to approve it. If Builder or Reviewer seems to
-never run or stops silently — this is why.
+---
 
-When using the Agent tool: leave `run_in_background` unset (defaults to foreground).
-When using manual paste: the fresh conversation is inherently foreground.
+## What Gets Installed
+
+The template copies these files into your project:
+
+- `.opencode/agent/architect.md` — Architect agent definition (primary agent)
+- `.opencode/agent/builder.md` — Builder agent definition (subagent)
+- `.opencode/agent/reviewer.md` — Reviewer agent definition (subagent)
+- `.opencode/skills/token-optimization/SKILL.md` — Token discipline skill
+- `opencode.json` — Project config (default_agent, agent definitions, skill paths)
+- `handoff/` — Inter-agent communication files (5 files)
+- `VERSION` — Current version tracker (for auto-update)
+- `new-setup.md` — First-time setup instructions
+
+---
+
+## Starting a Session
+
+After setup is complete:
+
+1. Run `opencode` in your project folder
+2. Switch to the architect agent (press Tab)
+3. Say: `Read handoff/SESSION-CHECKPOINT.md (or handoff/BUILD-LOG.md if no checkpoint), then tell me where we are.`

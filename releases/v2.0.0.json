@@ -1,0 +1,51 @@
+{
+  "version": "2.0.0",
+  "released": "2026-06-06",
+  "arch_opening": "Three Man Team v2.0.0 is available — this is a major change. We've ported the entire framework from Claude Code to opencode. I'll walk you through what that means for your setup. This will take a few minutes, but it's worth doing right.",
+  "changes": [
+    {
+      "id": "opencode-port",
+      "type": "major",
+      "title": "Ported from Claude Code to opencode",
+      "what_changed": "The entire framework now runs on opencode instead of Claude Code. Agent definitions moved from root-level ARCHITECT.md/BUILDER.md/REVIEWER.md to .opencode/agent/*.md files with YAML frontmatter. Config replaced: CLAUDE.md removed, replaced by opencode.json and .opencode/ directory structure.",
+      "old_behavior": "Agents defined as root-level markdown files loaded by CLAUDE.md. Builder and Reviewer spun up via Claude Code's Agent tool.",
+      "new_behavior": "Agents defined as .opencode/agent/*.md files with frontmatter (mode, model, description). Architect is a primary agent, Builder and Reviewer are subagents. Delegation uses opencode's Task tool.",
+      "user_impact_plain": "Your entire setup changes. You'll need to delete your old ARCHITECT.md, BUILDER.md, REVIEWER.md files and CLAUDE.md, then copy the new .opencode/ directory and opencode.json into your project. The handoff/ folder stays the same.",
+      "how_to_assess": "Check if the user still has root-level ARCHITECT.md, BUILDER.md, REVIEWER.md, and CLAUDE.md in their project. If they do, those need to be removed and replaced with the new .opencode/ structure.",
+      "user_decision": "This is a required upgrade — the old Claude Code structure will not work with opencode. Would you like me to walk you through the migration?"
+    },
+    {
+      "id": "config-replacement",
+      "type": "major",
+      "title": "CLAUDE.md replaced by opencode.json",
+      "what_changed": "The session router is now opencode.json instead of CLAUDE.md. Default agent is set to 'architect'. Instructions reference handoff/SESSION-CHECKPOINT.md. Skills path points to .opencode/skills.",
+      "old_behavior": "CLAUDE.md was a ~38-line markdown file that routed every session. It referenced @.claude/skills/token-optimization.md.",
+      "new_behavior": "opencode.json is a JSON config file that sets default_agent, instructions, agent definitions, and skills paths.",
+      "user_impact_plain": "You'll need to delete your old CLAUDE.md and add opencode.json. If you had custom content in CLAUDE.md, that content should move to an instructions file referenced in opencode.json.",
+      "how_to_assess": "Read the user's existing CLAUDE.md. If it has custom project content beyond the Three Man Team router, that content needs to be preserved in a separate file referenced by opencode.json instructions.",
+      "user_decision": "Does your current CLAUDE.md have custom content that needs to be preserved? If so, what file should I put it in?"
+    },
+    {
+      "id": "skill-location-change",
+      "type": "major",
+      "title": "Token-optimizer skill moved",
+      "what_changed": "The token-optimizer skill moved from .claude/skills/token-optimization.md to .opencode/skills/token-optimization/SKILL.md with proper YAML frontmatter.",
+      "old_behavior": "Skill was a single markdown file loaded via @.claude/skills/ reference in CLAUDE.md.",
+      "new_behavior": "Skill is now a SKILL.md file in its own directory, auto-loaded via opencode.json skills.paths configuration.",
+      "user_impact_plain": "If you customized the token-optimizer skill, you'll need to copy your changes to the new .opencode/skills/token-optimization/SKILL.md location.",
+      "how_to_assess": "Read the user's existing .claude/skills/token-optimization.md if it exists. Compare with the new .opencode/skills/token-optimization/SKILL.md template. If the user made customizations, those need to be migrated.",
+      "user_decision": "Did you customize the token-optimizer skill? If so, I'll help you migrate those changes."
+    },
+    {
+      "id": "model-id-format",
+      "type": "improvement",
+      "title": "Model IDs use provider prefix format",
+      "what_changed": "Model IDs now use opencode's provider-prefix format: anthropic/claude-sonnet-4-6 instead of claude-sonnet-4-6.",
+      "old_behavior": "Claude Code used bare model IDs like claude-opus-4-7.",
+      "new_behavior": "opencode uses provider/model format like anthropic/claude-sonnet-4-6, openai/gpt-4o, etc.",
+      "user_impact_plain": "If you configured specific models per agent, the model IDs need updating. This is a simple format change — just add the provider prefix.",
+      "how_to_assess": "Read the user's opencode.json (or their old CLAUDE.md/ARCHITECT.md if they haven migrated yet). Find any model references. Update them to provider-prefix format.",
+      "user_decision": "Which provider and model do you want for each agent? The defaults are: Architect inherits session model, Builder uses anthropic/claude-sonnet-4-6, Reviewer uses anthropic/claude-sonnet-4-6."
+    }
+  ]
+}

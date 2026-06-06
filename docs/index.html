@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Three Man Team — Multi-agent AI for teams that ship.</title>
-  <meta name="description" content="A multi-agent coordination framework for AI-assisted development. Three roles. One process. Less drift, fewer wasted tokens, better code.">
+  <title>Three Man Team — Multi-agent AI for teams that ship. Now on opencode.</title>
+  <meta name="description" content="A multi-agent coordination framework for AI-assisted development. Runs on opencode. Three roles. One process. Less drift, fewer wasted tokens, better code.">
 
   <!-- Open Graph -->
   <meta property="og:url" content="https://russellenvy.github.io/three-man-team/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Three Man Team — Multi-agent AI for teams that ship.">
-  <meta property="og:description" content="A multi-agent coordination framework for AI-assisted development. Three roles. One process. Less drift, fewer wasted tokens, better code.">
+  <meta property="og:title" content="Three Man Team — Multi-agent AI for teams that ship. Now on opencode.">
+  <meta property="og:description" content="A multi-agent coordination framework for AI-assisted development. Runs on opencode. Three roles. One process. Less drift, fewer wasted tokens, better code.">
   <meta property="og:image" content="https://russellenvy.github.io/three-man-team/assets/three-man-team-og-1200x630.png">
   <meta property="og:site_name" content="Three Man Team">
 
@@ -18,8 +18,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta property="twitter:domain" content="russellenvy.github.io">
   <meta property="twitter:url" content="https://russellenvy.github.io/three-man-team/">
-  <meta name="twitter:title" content="Three Man Team — Multi-agent AI for teams that ship.">
-  <meta name="twitter:description" content="A multi-agent coordination framework for AI-assisted development. Three roles. One process. Less drift, fewer wasted tokens, better code.">
+  <meta name="twitter:title" content="Three Man Team — Multi-agent AI for teams that ship. Now on opencode.">
+  <meta name="twitter:description" content="A multi-agent coordination framework for AI-assisted development. Runs on opencode. Three roles. One process. Less drift, fewer wasted tokens, better code.">
   <meta name="twitter:image" content="https://russellenvy.github.io/three-man-team/assets/three-man-team-og-1200x630.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -865,7 +865,7 @@
     </div>
 
     <div class="hero-proof">
-      <span class="proof-item">v1.2.3</span>
+      <span class="proof-item">v2.0.0</span>
       <span class="proof-sep"></span>
       <span class="proof-item">813 Stars</span>
       <span class="proof-sep"></span>
@@ -1010,7 +1010,7 @@
 
     <div class="one-session-note">
       <div class="one-session-label">How the team runs</div>
-      <p><strong>One Claude Code session. Three roles.</strong> You don't open three windows. Arch runs in your main session. When work is ready, Arch spins up Bob and Richard as subagents via Claude Code's Agent tool. All three roles happen in one place — handoff files on disk are how they communicate.</p>
+      <p><strong>One opencode session. Three roles.</strong> You don't open three windows. Arch runs in your main session. When work is ready, Arch delegates to Bob and Richard as subagents via opencode's Task tool. All three roles happen in one place — handoff files on disk are how they communicate.</p>
     </div>
 
   </div>
@@ -1062,7 +1062,7 @@
     <div class="section-label">Token Efficiency</div>
     <h2 class="section-headline">Less noise. More signal.</h2>
     <p class="section-body">
-      Three Man Team bakes token discipline into every role. Each agent follows five rules that kill waste before it compounds across a session. The token-optimizer skill ships with every install and auto-loads via CLAUDE.md — no manual setup required.
+      Three Man Team bakes token discipline into every role. Each agent follows five rules that kill waste before it compounds across a session. The token-optimizer skill ships with every install and auto-loads via opencode.json — no manual setup required.
     </p>
 
     <div class="token-rules">
@@ -1076,7 +1076,7 @@
     </div>
 
     <p class="token-rtk">
-      For bash output compression, RTK is a separate tool that compresses find, ls, grep output before it reaches Claude's context. Learn more at <a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener">github.com/rtk-ai/rtk</a>.
+      For bash output compression, RTK is a separate tool that compresses find, ls, grep output before it reaches the model's context. Learn more at <a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener">github.com/rtk-ai/rtk</a>.
     </p>
   </div>
 </section>
@@ -1090,19 +1090,19 @@
 
       <div class="ecosystem-card">
         <div class="ecosystem-card-title">
-          <a href="https://github.com/ryoppippi/ccusage" target="_blank" rel="noopener">ccusage ↗</a>
+          <a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener">RTK ↗</a>
         </div>
         <div class="ecosystem-card-desc">
-          Tracks your Claude Code token usage and costs by session, day, or billing window. Know exactly what you're spending.
+          Compresses bash command output before it hits your model's context window. Cuts 50-70% of bash output tokens automatically. Works silently in the background alongside Three Man Team's built-in token rules.
         </div>
       </div>
 
       <div class="ecosystem-card">
         <div class="ecosystem-card-title">
-          <a href="https://github.com/Vvkmnn/claude-historian-mcp" target="_blank" rel="noopener">claude-historian-mcp ↗</a>
+          <a href="https://opencode.ai" target="_blank" rel="noopener">opencode ↗</a>
         </div>
         <div class="ecosystem-card-desc">
-          An MCP server that lets Claude search your past conversation history. Find solutions you've already solved without starting from scratch.
+          The open source AI coding agent that Three Man Team runs on. Supports 75+ LLM providers, multi-session, LSP integration, and a rich agent system for teams like ours.
         </div>
       </div>
 
@@ -1128,8 +1128,8 @@
             <div class="code-block-dots"><span></span><span></span><span></span></div>
           </div>
           <pre><code>cd your-project
-git clone https://github.com/russelleNVy/three-man-team .claude/skills/three-man-team
-cd .claude/skills/three-man-team && ./setup</code></pre>
+git clone https://github.com/russelleNVy/three-man-team .opencode/skills/three-man-team
+cd .opencode/skills/three-man-team && ./setup</code></pre>
         </div>
       </div>
 
@@ -1140,8 +1140,8 @@ cd .claude/skills/three-man-team && ./setup</code></pre>
             <span class="code-block-lang">bash</span>
             <div class="code-block-dots"><span></span><span></span><span></span></div>
           </div>
-          <pre><code>git clone https://github.com/russelleNVy/three-man-team ~/.claude/skills/three-man-team
-cd ~/.claude/skills/three-man-team && ./setup</code></pre>
+          <pre><code>git clone https://github.com/russelleNVy/three-man-team ~/.config/opencode/skills/three-man-team
+cd ~/.config/opencode/skills/three-man-team && ./setup</code></pre>
         </div>
       </div>
 

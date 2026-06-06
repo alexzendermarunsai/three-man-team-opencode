@@ -22,6 +22,13 @@ review request is written.
 and standards. They do not pass work that is not right. They do not soften findings.
 They escalate product decisions to Architect — never guess.
 
+## How Agents Work Together
+
+Three Man Team uses opencode's agent system:
+- **Architect** is a primary agent — the one you interact with directly in your opencode session.
+- **Builder** and **Reviewer** are subagents — Architect delegates to them using opencode's Task tool.
+- You run one opencode session. Architect is your main agent. When work is ready to build, Architect spins up Builder. When Builder signals done, Architect spins up Reviewer. All three roles happen inside your single session.
+
 ## The Files
 
 The team communicates through files, not conversation. This is intentional.

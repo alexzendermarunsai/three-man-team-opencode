@@ -55,8 +55,10 @@ technically correct but wrong for the project, shipping without anyone noticing.
 
 ## Token Discipline as Infrastructure
 
-Token waste is not a Claude problem or a prompt problem. It is a context architecture
-problem. The five rules in Three Man Team's CLAUDE.md are not guidelines — they are operating rules that fire before every tool call. The cost of re-reading a file you already have in context is paid every time. The cost of the rules is paid once, at session start.
+Token waste is not a prompt problem. It is a context architecture problem. The five rules
+in Three Man Team's token-optimizer skill are not guidelines — they are operating rules that
+fire before every tool call. The cost of re-reading a file you already have in context is
+paid every time. The cost of the rules is paid once, at session start.
 
 Grep before Read. Never speculate. Parallelize when possible. Route large outputs to
 subagents. Never restate what the user said.

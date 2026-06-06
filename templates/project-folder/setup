@@ -1,0 +1,78 @@
+#!/bin/bash
+# Three Man Team setup script — opencode edition
+
+echo ""
+echo "========================================="
+echo "  Three Man Team — opencode"
+echo "========================================="
+echo ""
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PARENT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if [ "$PARENT_DIR" != "$HOME" ]; then
+  PROJECT_ROOT="$PARENT_DIR"
+else
+  PROJECT_ROOT="/path/to/your/project"
+fi
+
+echo "Welcome to Three Man Team for opencode."
+echo ""
+
+if [ "$PROJECT_ROOT" = "/path/to/your/project" ]; then
+  # Global install
+  echo "  Three Man Team is installed globally. You're set up once — use it in any project."
+  echo ""
+  echo "-----------------------------------------"
+  echo "  Step 1 — Copy template files into your project"
+  echo "-----------------------------------------"
+  echo ""
+  echo "  cp -r $SCRIPT_DIR/.opencode/ /path/to/your/project/.opencode/"
+  echo "  cp $SCRIPT_DIR/opencode.json /path/to/your/project/"
+  echo "  cp -r $SCRIPT_DIR/handoff/ /path/to/your/project/handoff/"
+  echo "  cp $SCRIPT_DIR/VERSION /path/to/your/project/"
+  echo "  cp $SCRIPT_DIR/new-setup.md /path/to/your/project/"
+  echo ""
+  echo "  Replace /path/to/your/project/ with your actual project folder."
+  echo ""
+  echo "-----------------------------------------"
+  echo "  Step 2 — Start your first session"
+  echo "-----------------------------------------"
+  echo ""
+  echo "  1. cd /path/to/your/project"
+  echo "  2. Run opencode"
+  echo "  3. Switch to the architect agent (press Tab)"
+  echo "  4. Say: Read new-setup.md."
+  echo ""
+  echo "  Arch will introduce the team, set up your project context, and give you"
+  echo "  the prompt to use every session going forward."
+  echo ""
+else
+  # Per-project install
+  echo "-----------------------------------------"
+  echo "  Step 1 — Copy template files into your project"
+  echo "-----------------------------------------"
+  echo ""
+  echo "  Run these commands:"
+  echo ""
+  echo "  cp -r $SCRIPT_DIR/.opencode/ $PROJECT_ROOT/.opencode/"
+  echo "  cp $SCRIPT_DIR/opencode.json $PROJECT_ROOT/"
+  echo "  cp -r $SCRIPT_DIR/handoff/ $PROJECT_ROOT/handoff/"
+  echo "  cp $SCRIPT_DIR/VERSION $PROJECT_ROOT/"
+  echo "  cp $SCRIPT_DIR/new-setup.md $PROJECT_ROOT/"
+  echo ""
+  echo "  Then navigate to your project root:"
+  echo ""
+  echo "  cd $PROJECT_ROOT"
+  echo ""
+  echo "-----------------------------------------"
+  echo "  Step 2 — Start your first session"
+  echo "-----------------------------------------"
+  echo ""
+  echo "  1. Run opencode"
+  echo "  2. Switch to the architect agent (press Tab)"
+  echo "  3. Say: Read new-setup.md."
+  echo ""
+  echo "  Arch will introduce the team, set up your project context, and give you"
+  echo "  the prompt to use every session going forward."
+  echo ""
+fi

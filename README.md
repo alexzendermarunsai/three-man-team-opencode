@@ -12,12 +12,14 @@
 
 ---
 
-## What's New — v1.2.5
+## What's New — v2.0.0
 
-- Fixed: RICHARD.md → REVIEWER.md in Richard spinup prompt ([#9](https://github.com/russelleNVy/three-man-team/issues/9))
-- Fixed: BOB.md → BUILDER.md missed in root-level template (v1.2.4 incomplete)
-- Fixed: version check upgraded to full procedure with migration walkthrough
-- Removed fabricated DeepMind citation — replaced with first-principles reasoning
+- **Ported to opencode.** Three Man Team now runs on [opencode](https://opencode.ai) — the open source AI coding agent. No longer requires Claude Code.
+- Agent definitions moved to `.opencode/agent/*.md` files with YAML frontmatter (mode, model, description)
+- Config replaced: `CLAUDE.md` removed → `opencode.json` + `.opencode/` directory structure
+- Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
+- Delegation uses opencode's Task tool instead of Claude Code's Agent tool
+- Token-optimizer skill moved to `.opencode/skills/token-optimization/SKILL.md`
 
 See [all releases →](https://github.com/russelleNVy/three-man-team/releases)
 
@@ -51,7 +53,7 @@ The roles map to how real software ships:
 
 ## Quick Start
 
-**How the team runs:** Three Man Team uses one Claude Code session. Arch is your main agent. When work is ready to build, Arch spins up Bob as a subagent via Claude Code's Agent tool. When Bob is done, Arch spins up Richard the same way. You don't open three windows — everything runs inside your single session.
+**How the team runs:** Three Man Team uses one opencode session. Arch is your main agent. When work is ready to build, Arch delegates to Bob as a subagent via opencode's Task tool. When Bob is done, Arch delegates to Richard the same way. You don't open three windows — everything runs inside your single session.
 
 Choose your install type:
 
@@ -64,16 +66,16 @@ One project, one install. Clone directly into your project folder.
 **Step 1 — Navigate to your project folder and clone**
 
 ```bash
-git clone https://github.com/russelleNVy/three-man-team.git .claude/skills/three-man-team
+git clone https://github.com/russelleNVy/three-man-team.git .opencode/skills/three-man-team
 ```
 
 **Step 2 — Run setup and follow the instructions**
 
 ```bash
-cd .claude/skills/three-man-team && ./setup
+cd .opencode/skills/three-man-team && ./setup
 ```
 
-Setup takes over from here. It will give you the exact commands to run and the prompt to paste into Claude to get started. Follow what it prints.
+Setup takes over from here. It will give you the exact commands to run and tell you how to get started in opencode. Follow what it prints.
 
 ---
 
@@ -81,11 +83,11 @@ Setup takes over from here. It will give you the exact commands to run and the p
 
 Install once, use in any project.
 
-**Step 1 — Clone to your global Claude skills folder**
+**Step 1 — Clone to your global opencode skills folder**
 
 ```bash
-git clone https://github.com/russelleNVy/three-man-team.git ~/.claude/skills/three-man-team
-cd ~/.claude/skills/three-man-team && ./setup
+git clone https://github.com/russelleNVy/three-man-team.git ~/.config/opencode/skills/three-man-team
+cd ~/.config/opencode/skills/three-man-team && ./setup
 ```
 
 That's the one-time install. Setup will confirm everything is in place.
@@ -94,17 +96,17 @@ That's the one-time install. Setup will confirm everything is in place.
 
 **For each project you want to use Three Man Team on:**
 
-**Step 2 — Copy agent files into your project, then spin up Claude**
+**Step 2 — Copy template files into your project, then start opencode**
 
 ```bash
-cp -r ~/.claude/skills/three-man-team/templates/project-folder/. /path/to/your/project/
+cp -r ~/.config/opencode/skills/three-man-team/templates/project-folder/. /path/to/your/project/
 cd /path/to/your/project
 ```
 
-Open Claude Code and paste:
+Start opencode, switch to the architect agent (press Tab), and say:
 
 ```
-You are the Architect on this project. Please read new-setup.md.
+Read new-setup.md.
 ```
 
 Arch will handle the rest — project context file, team names, and your first session prompt.
@@ -135,9 +137,19 @@ Architect, Builder, Reviewer are the defaults. Rename them to anything — Arch 
 
 ---
 
+## How It Works Under the Hood
+
+Three Man Team uses opencode's agent system:
+- **Architect** is a `primary` agent — you interact with it directly in your opencode session (press Tab to switch to it).
+- **Builder** and **Reviewer** are `subagent` agents — Architect delegates to them via the Task tool when work needs building or reviewing.
+- All inter-agent communication happens through files in the `handoff/` directory — not through conversation.
+- The `opencode.json` config file routes sessions: it sets `default_agent: "architect"` and defines all three agents with their modes and models.
+
+---
+
 ## Token Optimization
 
-Every session starts with five rules baked into CLAUDE.md:
+Every session starts with five rules baked into the token-optimizer skill:
 
 ```
 Is this in a skill or memory?   → Trust it. Skip the file read.
@@ -147,11 +159,11 @@ Output > 20 lines you won't use → Route to subagent.
 About to restate what user said → Delete it.
 ```
 
-The token-optimizer skill ships with every install and auto-loads via CLAUDE.md — no manual setup required.
+The token-optimizer skill ships with every install and auto-loads via opencode.json — no manual setup required.
 
 For bash output compression on top of these rules, see [RTK](https://github.com/rtk-ai/rtk) —
-a separate tool that compresses `find`, `ls`, `grep` output before it reaches Claude's context.
-Not required, but recommended for heavy Claude Code CLI users. The combination of RTK (bash layer)
+a separate tool that compresses `find`, `ls`, `grep` output before it reaches the model's context.
+Not required, but recommended for heavy opencode users. The combination of RTK (bash layer)
 + token-optimizer (behavior layer) is where real savings compound.
 
 See `docs/token-optimization.md` for the full discipline.

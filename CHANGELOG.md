@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.0.0 — 2026-06-06
+
+- Port: Three Man Team now runs on [opencode](https://opencode.ai) instead of Claude Code
+- Config: `CLAUDE.md` removed, replaced by `opencode.json` and `.opencode/` directory structure
+- Agents: Architect, Builder, and Reviewer now defined as `.opencode/agent/*.md` files with YAML frontmatter (mode, model, description)
+- Architecture: Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
+- Delegation: Architect delegates to Builder/Reviewer via opencode's Task tool instead of Claude Code's Agent tool
+- Skills: token-optimizer moved to `.opencode/skills/token-optimization/SKILL.md` with proper frontmatter
+- Handoff: `SESSION-CHECKPOINT.md` resume prompt updated for opencode's agent switching (Tab key)
+- Setup: setup script rewritten to copy `.opencode/` structure and `opencode.json` instead of root-level agent files
+- Models: Builder and Reviewer default to `anthropic/claude-sonnet-4-6` (provider-prefix format)
+- Deleted: root-level `CLAUDE.md`, root-level `setup`, `.claude/skills/`, `_temp/`, per-template `ARCHITECT.md`, `BUILDER.md`, `REVIEWER.md`
+- Docs: README, METHODOLOGY, how-it-works, token-optimization, sprint-walkthrough, session-start, INSTALL all updated for opencode
+
 ## v1.2.5 — 2026-06-04
 
 - Fix: RICHARD.md → REVIEWER.md in Richard spinup prompt — Richard was told to read a file that doesn't exist

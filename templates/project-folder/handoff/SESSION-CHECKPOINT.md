@@ -21,14 +21,21 @@
 
 ---
 
+## Version Check
+
+version_notified: [tag_name or blank]
+
+---
+
 ## Resume Prompt
 
 Copy and paste this to resume:
 
 ---
 
-You are [Architect name] on [project name].
-Read SESSION-CHECKPOINT.md, then ARCHITECT.md.
+You are the Architect on [project name].
+Switch to the architect agent in opencode.
+Read handoff/SESSION-CHECKPOINT.md, then .opencode/agent/architect.md.
 Confirm where we stopped and what the next action is. Then wait.
 
 ---
