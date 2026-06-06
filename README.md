@@ -191,9 +191,15 @@ Arch handles renaming during setup — just tell it the new names.
 
 ---
 
+## Credits
+
+This is an [opencode](https://opencode.ai) port of the original [Three Man Team](https://github.com/russelleNVy/three-man-team) by **Russell Aaron**. The opencode port is maintained by **Alexzender Marunsai**. All design principles, personas, handoff formats, and workflow rules are unchanged from the original. See [`CREDITS.md`](CREDITS.md) for full attribution.
+
+---
+
 ## License
 
-MIT. Free forever.
+MIT. Free forever. Copyright (c) 2026 Russell Aaron, Alexzender Marunsai.
 
 ---
 
@@ -202,3 +208,5 @@ MIT. Free forever.
 Russell Aaron — 20+ years building and supporting software the right way. He built this team
 in production shipping a real SaaS platform. It works because it was used before it was
 published, fine tuned, and will continue to get better over time as AI models and tools evolve.
+
+Opencode port by [Alexzender Marunsai](https://github.com/alexzendermarunsai).
