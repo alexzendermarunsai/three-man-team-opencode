@@ -31,7 +31,7 @@ cd ~/.config/opencode/skills/three-man-team/templates/project && ./setup global
 Setup installs:
 - Agents → `~/.config/opencode/agents/` (architect.md, builder.md, reviewer.md)
 - Skill → `~/.config/opencode/skills/token-optimization/SKILL.md`
-- Config → merges agent definitions into `~/.config/opencode/opencode.json` (does NOT set `default_agent` or `instructions` globally)
+- Config → merges agent definitions into `~/.config/opencode/opencode.json` (does NOT set `default_agent`, `instructions`, or `skills.paths` globally — opencode auto-discovers skills from `~/.config/opencode/skills/`)
 
 Then for each project you want to use Three Man Team on:
 
@@ -87,7 +87,7 @@ opencode deep-merges global config (`~/.config/opencode/`) with project config:
 | What | Global | Project | Result |
 |---|---|---|---|
 | Agent definitions | `~/.config/opencode/agents/*.md` | `.opencode/agents/*.md` | **Project overrides global** |
-| Skill definitions | `~/.config/opencode/skills/` | `.opencode/skills/` | **Project overrides global** |
+| Skill definitions | `~/.config/opencode/skills/` | `.opencode/skills/` | **Project overrides global** — auto-discovered, no `skills.paths` config needed |
 | `default_agent` | (not set) | `"architect"` | `"architect"` (project-level) |
 | `instructions` | (not set) | `["handoff/...", "PROJECT.md"]` | Project-level (concatenated + deduplicated) |
 | `agent.*.model` | `anthropic/claude-sonnet-4-6` | (override) | **Project overrides global** |

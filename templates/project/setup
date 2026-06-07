@@ -52,10 +52,12 @@ if [ "$MODE" = "global" ]; then
     echo "  You already have a global opencode.json at:"
     echo "    $GLOBAL_CONFIG"
     echo ""
-    echo "  Three Man Team needs to add agent definitions and skill paths."
+    echo "  Three Man Team needs to add agent definitions to your config."
+    echo "  opencode auto-discovers skills from ~/.config/opencode/skills/ and .opencode/skills/ —"
+    echo "  no skills.paths configuration needed."
+    echo ""
     echo "  Merge these keys into your existing config:"
     echo ""
-    echo "  \"skills\": { \"paths\": [\".opencode/skills\"] },"
     echo "  \"agent\": {"
     echo "    \"architect\": { \"mode\": \"primary\" },"
     echo "    \"builder\": { \"mode\": \"subagent\", \"model\": \"anthropic/claude-sonnet-4-6\" },"
@@ -68,9 +70,11 @@ if [ "$MODE" = "global" ]; then
     echo "  See the template at: $TEMPLATE_GLOBAL/opencode.json"
   else
     cp "$TEMPLATE_GLOBAL/opencode.json" "$GLOBAL_CONFIG"
-    echo "  Created $GLOBAL_CONFIG with agent definitions and skill paths."
+    echo "  Created $GLOBAL_CONFIG with agent definitions."
     echo ""
-    echo "  This config does NOT set default_agent or instructions — those are"
+    echo "  Skills are auto-discovered from ~/.config/opencode/skills/ — no config needed."
+    echo ""
+    echo "  This config does NOT set default_agent, instructions, or skills.paths — those are"
     echo "  project-specific and go in each project's opencode.json."
   fi
 

@@ -42,7 +42,7 @@
       "title": "Token-optimizer skill moved",
       "what_changed": "The token-optimizer skill moved from .claude/skills/token-optimization.md to .opencode/skills/token-optimization/SKILL.md (per-project) or ~/.config/opencode/skills/token-optimization/SKILL.md (global).",
       "old_behavior": "Skill was a single markdown file loaded via @.claude/skills/ reference in CLAUDE.md.",
-      "new_behavior": "Skill is now a SKILL.md file in its own directory. For per-project install: .opencode/skills/token-optimization/SKILL.md. For global install: ~/.config/opencode/skills/token-optimization/SKILL.md. Auto-loaded via opencode.json skills.paths configuration or opencode's global skill discovery.",
+      "new_behavior": "Skill is now a SKILL.md file in its own directory. For per-project install: .opencode/skills/token-optimization/SKILL.md. For global install: ~/.config/opencode/skills/token-optimization/SKILL.md. Auto-discovered by opencode from ~/.config/opencode/skills/ and .opencode/skills/ — no skills.paths configuration needed.",
       "user_impact_plain": "If you customized the token-optimizer skill, you'll need to copy your changes to the new location. Global install puts it at ~/.config/opencode/skills/ so it works in all projects.",
       "how_to_assess": "Read the user's existing .claude/skills/token-optimization.md if it exists. Compare with the new SKILL.md template. If the user made customizations, those need to be migrated.",
       "user_decision": "Did you customize the token-optimizer skill? If so, I'll help you migrate those changes."
