@@ -1,0 +1,189 @@
+#!/bin/bash
+# Three Man Team setup script — opencode edition
+# Usage: ./setup global          — install agents + skill + config into ~/.config/opencode/
+#        ./setup project <path>  — copy project files + agents into target project
+#        ./setup                 — interactive: choose mode
+
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+TEMPLATE_GLOBAL="$REPO_DIR/templates/global"
+TEMPLATE_PROJECT="$REPO_DIR/templates/project"
+
+echo ""
+echo "========================================="
+echo "  Three Man Team — opencode"
+echo "========================================="
+echo ""
+
+MODE="${1:-}"
+TARGET="${2:-}"
+
+if [ -z "$MODE" ]; then
+  echo "Choose install type:"
+  echo ""
+  echo "  1) global    — Install agents & skill into ~/.config/opencode/ (available in ALL projects)"
+  echo "  2) project   — Copy all files into a specific project directory"
+  echo ""
+  read -p "Enter 1 or 2: " CHOICE
+  if [ "$CHOICE" = "1" ]; then
+    MODE="global"
+  elif [ "$CHOICE" = "2" ]; then
+    MODE="project"
+    read -p "Enter project path (e.g. /path/to/your/project): " TARGET
+  else
+    echo "Invalid choice. Exiting."
+    exit 1
+  fi
+fi
+
+if [ "$MODE" = "global" ]; then
+  echo "Global install — agents and skill available in ALL opencode projects via deep-merge."
+  echo ""
+
+  GLOBAL_DIR="$HOME/.config/opencode"
+
+  # Step 1 — Copy agents and skill into global opencode config
+  echo "-----------------------------------------"
+  echo "  Step 1 — Install agents & skill"
+  echo "-----------------------------------------"
+  echo ""
+
+  mkdir -p "$GLOBAL_DIR/agents" "$GLOBAL_DIR/skills/token-optimization"
+
+  cp "$TEMPLATE_GLOBAL/agents/architect.md" "$GLOBAL_DIR/agents/architect.md"
+  cp "$TEMPLATE_GLOBAL/agents/builder.md" "$GLOBAL_DIR/agents/builder.md"
+  cp "$TEMPLATE_GLOBAL/agents/reviewer.md" "$GLOBAL_DIR/agents/reviewer.md"
+  cp "$TEMPLATE_GLOBAL/skills/token-optimization/SKILL.md" "$GLOBAL_DIR/skills/token-optimization/SKILL.md"
+
+  echo "  Copied:"
+  echo "    $GLOBAL_DIR/agents/architect.md"
+  echo "    $GLOBAL_DIR/agents/builder.md"
+  echo "    $GLOBAL_DIR/agents/reviewer.md"
+  echo "    $GLOBAL_DIR/skills/token-optimization/SKILL.md"
+  echo ""
+
+  # Step 2 — Merge global opencode.json
+  echo "-----------------------------------------"
+  echo "  Step 2 — Merge global opencode.json"
+  echo "-----------------------------------------"
+  echo ""
+
+  GLOBAL_CONFIG="$GLOBAL_DIR/opencode.json"
+  if [ -f "$GLOBAL_CONFIG" ]; then
+    echo "  You already have a global opencode.json at:"
+    echo "    $GLOBAL_CONFIG"
+    echo ""
+    echo "  Three Man Team needs to add agent definitions to your config."
+    echo "  opencode auto-discovers skills from ~/.config/opencode/skills/ — no skills.paths config needed."
+    echo ""
+    echo "  Merge these keys into your existing config:"
+    echo ""
+    echo '  "agent": {'
+    echo '    "architect": { "mode": "primary" },'
+    echo '    "builder": { "mode": "subagent", "model": "anthropic/claude-sonnet-4-6" },'
+    echo '    "reviewer": { "mode": "subagent", "model": "anthropic/claude-sonnet-4-6" }'
+    echo '  }'
+    echo ""
+    echo "  IMPORTANT: Do NOT add default_agent or instructions at the global level."
+    echo "  Those are project-specific and belong in each project's opencode.json."
+    echo ""
+    echo "  See the template at: $TEMPLATE_GLOBAL/opencode.json"
+  else
+    cp "$TEMPLATE_GLOBAL/opencode.json" "$GLOBAL_CONFIG"
+    echo "  Created $GLOBAL_CONFIG with agent definitions."
+    echo ""
+    echo "  Skills are auto-discovered from ~/.config/opencode/skills/ — no config needed."
+    echo ""
+    echo "  This config does NOT set default_agent or instructions — those are"
+    echo "  project-specific and go in each project's opencode.json."
+  fi
+
+  # Step 3 — Instructions for each project
+  echo ""
+  echo "-----------------------------------------"
+  echo "  Step 3 — Set up each project"
+  echo "-----------------------------------------"
+  echo ""
+  echo "  For each project you want to use Three Man Team on:"
+  echo ""
+  echo "  ./setup project /path/to/your/project"
+  echo ""
+  echo "  Or manually copy project state files:"
+  echo ""
+  echo "  cp -r $TEMPLATE_PROJECT/. /path/to/your/project/"
+  echo ""
+  echo "  Then start opencode, switch to the architect agent (press Tab), and say: Read new-setup.md."
+  echo ""
+
+elif [ "$MODE" = "project" ]; then
+  if [ -z "$TARGET" ]; then
+    echo "Usage: ./setup project /path/to/your/project"
+    echo ""
+    echo "  Specify the target project directory."
+    exit 1
+  fi
+
+  # Resolve target path
+  TARGET="$(cd "$TARGET" 2>/dev/null && pwd)" || TARGET="$TARGET"
+
+  echo "Per-project install — target: $TARGET"
+  echo ""
+
+  # Step 1 — Copy project state files
+  echo "-----------------------------------------"
+  echo "  Step 1 — Copy project state files"
+  echo "-----------------------------------------"
+  echo ""
+
+  cp -r "$TEMPLATE_PROJECT/." "$TARGET/"
+
+  echo "  Copied project state files to $TARGET/:"
+  echo "    opencode.json, handoff/, VERSION, new-setup.md, PROJECT.md"
+  echo ""
+
+  # Step 2 — Copy agents and skill into project's .opencode/
+  echo "-----------------------------------------"
+  echo "  Step 2 — Copy agents & skill into .opencode/"
+  echo "-----------------------------------------"
+  echo ""
+
+  mkdir -p "$TARGET/.opencode/agents" "$TARGET/.opencode/skills/token-optimization"
+
+  cp "$TEMPLATE_GLOBAL/agents/architect.md" "$TARGET/.opencode/agents/architect.md"
+  cp "$TEMPLATE_GLOBAL/agents/builder.md" "$TARGET/.opencode/agents/builder.md"
+  cp "$TEMPLATE_GLOBAL/agents/reviewer.md" "$TARGET/.opencode/agents/reviewer.md"
+  cp "$TEMPLATE_GLOBAL/skills/token-optimization/SKILL.md" "$TARGET/.opencode/skills/token-optimization/SKILL.md"
+
+  echo "  Copied agent and skill files to $TARGET/.opencode/:"
+  echo "    .opencode/agents/architect.md, builder.md, reviewer.md"
+  echo "    .opencode/skills/token-optimization/SKILL.md"
+  echo ""
+
+  # Note about global install
+  echo "  NOTE: If you later switch to a global install, you can delete"
+  echo "  $TARGET/.opencode/agents/ and $TARGET/.opencode/skills/"
+  echo "  — opencode will use the global agents from ~/.config/opencode/ instead."
+  echo ""
+
+  # Step 3 — Start session
+  echo "-----------------------------------------"
+  echo "  Step 3 — Start your first session"
+  echo "-----------------------------------------"
+  echo ""
+  echo "  1. cd $TARGET"
+  echo "  2. Run opencode"
+  echo "  3. Switch to the architect agent (press Tab)"
+  echo "  4. Say: Read new-setup.md."
+  echo ""
+  echo "  Architect will introduce the team, set up your project context, and give you"
+  echo "  the prompt to use every session going forward."
+  echo ""
+
+else
+  echo "Usage: ./setup [global|project <path>]"
+  echo ""
+  echo "  global            — Install agents & skill into ~/.config/opencode/ (all projects)"
+  echo "  project <path>    — Copy all files into the target project directory"
+  echo ""
+  echo "  Run ./setup with no arguments for interactive mode."
+  exit 1
+fi

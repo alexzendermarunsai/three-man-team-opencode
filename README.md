@@ -56,60 +56,66 @@ The roles map to how real software ships:
 
 **How the team runs:** Three Man Team uses one opencode session. Architect is your main agent. When work is ready to build, Architect delegates to Builder as a subagent via opencode's Task tool. When Builder is done, Architect delegates to Reviewer the same way. You don't open three windows — everything runs inside your single session.
 
+Clone the repo anywhere, then run setup:
+
+```bash
+git clone https://github.com/alexzendermarunsai/three-man-team-opencode.git
+cd three-man-team-opencode
+```
+
 Choose your install type:
 
 ---
 
 ### Per-project install (recommended)
 
-One project, one install. Clone directly into your project folder.
-
-**Step 1 — Navigate to your project folder and clone**
+One project, one install. Agents and skills go into the project's `.opencode/` directory.
 
 ```bash
-cd /path/to/your/project
-git clone https://github.com/alexzendermarunsai/three-man-team-opencode.git .opencode/skills/three-man-team
+./setup project /path/to/your/project
 ```
 
-**Step 2 — Run setup and follow the instructions**
-
-```bash
-cd .opencode/skills/three-man-team/templates/project && ./setup project
-```
-
-Setup takes over from here. It will give you the exact commands to copy project state files and agent definitions into your project.
+Setup copies project state files (handoff, opencode.json, VERSION, new-setup.md, PROJECT.md) and agent definitions into the target project. Then start opencode and switch to the architect agent.
 
 ---
 
 ### Global install (all projects)
 
-Install once — agents and skills are available in every opencode project automatically via deep-merge. You only copy project state files (handoff, config, VERSION) into each project.
-
-**Step 1 — Clone to your global opencode config folder**
+Install once — agents and skill go into `~/.config/opencode/` and are available in every opencode project automatically via deep-merge. You only copy project state files into each project.
 
 ```bash
-git clone https://github.com/alexzendermarunsai/three-man-team-opencode.git ~/.config/opencode/skills/three-man-team
-cd ~/.config/opencode/skills/three-man-team/templates/project && ./setup global
+./setup global
 ```
 
-Setup installs agents into `~/.config/opencode/agents/`, the skill into `~/.config/opencode/skills/`, and merges agent definitions into your global `opencode.json`. It does NOT set `default_agent` or `instructions` globally — those are project-specific.
+Setup copies agents into `~/.config/opencode/agents/`, the skill into `~/.config/opencode/skills/`, and merges agent definitions into your global `opencode.json`. It does NOT set `default_agent` or `instructions` globally — those are project-specific.
 
-**Step 2 — For each project, copy project state files only**
+**For each project you want to use Three Man Team on:**
 
 ```bash
-cp -r ~/.config/opencode/skills/three-man-team/templates/project/. /path/to/your/project/
-cd /path/to/your/project
+./setup project /path/to/your/project
 ```
 
-opencode automatically deep-merges the global agents + skill into this project. No need to copy agent files per-project.
+Or manually copy only the project state files (no agents needed — they come from global merge):
 
-Start opencode, switch to the architect agent (press Tab), and say:
+```bash
+cp -r templates/project/. /path/to/your/project/
+```
+
+opencode automatically deep-merges the global agents + skill into this project. Start opencode, switch to the architect agent (press Tab), and say:
 
 ```
 Read new-setup.md.
 ```
 
 ---
+
+### Updates
+
+```bash
+git pull
+./setup global        # re-deploy global agents + skill
+./setup project /path/to/project  # re-deploy per-project files
+```
 
 ## The Workflow
 
