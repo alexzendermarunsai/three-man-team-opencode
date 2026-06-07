@@ -22,7 +22,7 @@ This project is a fork of [Three Man Team](https://github.com/russelleNVy/three-
 
 The v2.0.0 fork ported the entire framework from Claude Code to opencode:
 
-- Agent definitions moved from root-level markdown files to `.opencode/agent/*.md` with YAML frontmatter
+- Agent definitions moved from root-level markdown files to `.opencode/agents/*.md` with YAML frontmatter
 - Config replaced: `CLAUDE.md` removed, replaced by `opencode.json` + `.opencode/` directory structure
 - Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
 - Delegation uses opencode's Task tool instead of Claude Code's Agent tool

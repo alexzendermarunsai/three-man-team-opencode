@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "Welcome to Three Man Team for opencode."
 echo ""
 echo "This is the generic template with [CUSTOMIZE] placeholders."
-echo "Customize the persona sections in .opencode/agent/*.md before using."
+echo "Customize the persona sections in .opencode/agents/*.md before using."
 echo ""
 
 echo "-----------------------------------------"

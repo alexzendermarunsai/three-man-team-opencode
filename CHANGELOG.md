@@ -4,7 +4,7 @@
 
 - Port: Three Man Team now runs on [opencode](https://opencode.ai) instead of Claude Code
 - Config: `CLAUDE.md` removed, replaced by `opencode.json` and `.opencode/` directory structure
-- Agents: Architect, Builder, and Reviewer now defined as `.opencode/agent/*.md` files with YAML frontmatter (mode, model, description)
+- Agents: Architect, Builder, and Reviewer now defined as `.opencode/agents/*.md` files with YAML frontmatter (mode, model, description)
 - Architecture: Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
 - Delegation: Architect delegates to Builder/Reviewer via opencode's Task tool instead of Claude Code's Agent tool
 - Skills: token-optimizer moved to `.opencode/skills/token-optimization/SKILL.md` with proper frontmatter

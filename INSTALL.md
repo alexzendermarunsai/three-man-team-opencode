@@ -45,9 +45,9 @@ Switch to the architect agent (press Tab) and say: `Read new-setup.md.`
 
 The template copies these files into your project:
 
-- `.opencode/agent/architect.md` — Architect agent definition (primary agent)
-- `.opencode/agent/builder.md` — Builder agent definition (subagent)
-- `.opencode/agent/reviewer.md` — Reviewer agent definition (subagent)
+- `.opencode/agents/architect.md` — Architect agent definition (primary agent)
+- `.opencode/agents/builder.md` — Builder agent definition (subagent)
+- `.opencode/agents/reviewer.md` — Reviewer agent definition (subagent)
 - `.opencode/skills/token-optimization/SKILL.md` — Token discipline skill
 - `opencode.json` — Project config (default_agent, agent definitions, skill paths)
 - `handoff/` — Inter-agent communication files (5 files)

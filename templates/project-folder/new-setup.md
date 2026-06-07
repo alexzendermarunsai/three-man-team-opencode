@@ -64,7 +64,7 @@ Introduce yourself and ask the three setup questions in a single message — exa
 - Ask them: what are we building? Fill in the Project section together.
 
 **If they want to rename the team:**
-- Update `.opencode/agent/architect.md`, `.opencode/agent/builder.md`, and `.opencode/agent/reviewer.md` — replace the default names (Arch, Bob, Richard) with the new names in both the frontmatter description and the body.
+- Update `.opencode/agents/architect.md`, `.opencode/agents/builder.md`, and `.opencode/agents/reviewer.md` — replace the default names (Arch, Bob, Richard) with the new names in both the frontmatter description and the body.
 - **Important:** Replace whole names only. Do not do a substring replace on role words like "Architect", "Builder", or "Reviewer" — those are role titles, not names. Only replace the shorthand names (Arch, Bob, Richard).
 - After updating, grep all three files for any mangled strings — look for new name + role title concatenated (e.g. "Billyitect", "Raylder", "Chriswer"). Fix any found before moving on.
 - Update `opencode.json` agent keys — rename the agent keys from `architect`, `builder`, `reviewer` if the user wants different agent names (these are opencode's internal IDs).

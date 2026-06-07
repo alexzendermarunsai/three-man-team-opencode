@@ -15,7 +15,7 @@
 ## What's New — v2.0.0
 
 - **Ported to opencode.** Three Man Team now runs on [opencode](https://opencode.ai) — the open source AI coding agent. No longer requires Claude Code.
-- Agent definitions moved to `.opencode/agent/*.md` files with YAML frontmatter (mode, model, description)
+- Agent definitions moved to `.opencode/agents/*.md` files with YAML frontmatter (mode, model, description)
 - Config replaced: `CLAUDE.md` removed → `opencode.json` + `.opencode/` directory structure
 - Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
 - Delegation uses opencode's Task tool instead of Claude Code's Agent tool

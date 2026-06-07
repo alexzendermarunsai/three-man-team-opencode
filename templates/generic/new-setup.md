@@ -55,7 +55,7 @@ Introduce yourself and ask the setup questions in a single message — exactly l
 - Add `PROJECT.md` to `opencode.json` instructions.
 
 **If they want to rename the team:**
-- Update `.opencode/agent/architect.md`, `.opencode/agent/builder.md`, and `.opencode/agent/reviewer.md` — replace the default names with the new names in both the frontmatter description and the body.
+- Update `.opencode/agents/architect.md`, `.opencode/agents/builder.md`, and `.opencode/agents/reviewer.md` — replace the default names with the new names in both the frontmatter description and the body.
 - **Important:** Replace whole names only. Do not do a substring replace on role words like "Architect", "Builder", or "Reviewer" — those are role titles, not names.
 - Update `opencode.json` agent keys if the user wants different agent IDs.
 
