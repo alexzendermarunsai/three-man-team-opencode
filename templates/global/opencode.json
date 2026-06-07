@@ -1,9 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "architect",
-  "instructions": [
-    "handoff/SESSION-CHECKPOINT.md"
-  ],
   "skills": {
     "paths": [".opencode/skills"]
   },

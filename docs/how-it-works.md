@@ -24,10 +24,18 @@ They escalate product decisions to Architect — never guess.
 
 ## How Agents Work Together
 
-Three Man Team uses opencode's agent system:
+Three Man Team uses opencode's agent system with config deep-merge:
 - **Architect** is a primary agent — the one you interact with directly in your opencode session.
 - **Builder** and **Reviewer** are subagents — Architect delegates to them using opencode's Task tool.
 - You run one opencode session. Architect is your main agent. When work is ready to build, Architect spins up Builder. When Builder signals done, Architect spins up Reviewer. All three roles happen inside your single session.
+
+### Config Deep-Merge
+
+opencode deep-merges global config (`~/.config/opencode/`) with project config:
+- **Global install**: Agent definitions and skills live at `~/.config/opencode/agents/` and `~/.config/opencode/skills/` — available in every project automatically.
+- **Per-project install**: Same files but local to the project's `.opencode/` directory.
+- **Project config** (`opencode.json` in project root) sets `default_agent` and project-specific `instructions` — opencode merges these over the global config.
+- **Project agents** (`.opencode/agents/*.md`) override same-name global agents — customize personas per-project without touching the global definitions.
 
 ## The Files
 

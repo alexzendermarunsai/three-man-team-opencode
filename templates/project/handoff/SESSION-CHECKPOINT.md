@@ -33,9 +33,9 @@ Copy and paste this to resume:
 
 ---
 
-You are [Architect name] on [project name].
+You are the Architect on [project name].
 Switch to the architect agent in opencode.
-Read handoff/SESSION-CHECKPOINT.md, then .opencode/agents/architect.md.
+Read handoff/SESSION-CHECKPOINT.md, then handoff/BUILD-LOG.md if the checkpoint doesn't cover current state.
 Confirm where we stopped and what the next action is. Then wait.
 
 ---

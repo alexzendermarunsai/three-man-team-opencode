@@ -15,13 +15,14 @@
 ## What's New — v2.0.0
 
 - **Ported to opencode.** Three Man Team now runs on [opencode](https://opencode.ai) — the open source AI coding agent. No longer requires Claude Code.
-- Agent definitions moved to `.opencode/agents/*.md` files with YAML frontmatter (mode, model, description)
+- **Two-template architecture** — `templates/global/` (agents + skills + config for `~/.config/opencode/`) and `templates/project/` (handoff state + project config). opencode deep-merges them automatically.
+- Agent definitions moved to `.opencode/agents/*.md` / `~/.config/opencode/agents/*.md` with YAML frontmatter (mode, model, description)
 - Config replaced: `CLAUDE.md` removed → `opencode.json` + `.opencode/` directory structure
 - Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
 - Delegation uses opencode's Task tool instead of Claude Code's Agent tool
 - Token-optimizer skill moved to `.opencode/skills/token-optimization/SKILL.md`
 
-See [all releases →](https://github.com/russelleNVy/three-man-team/releases)
+See [all releases →](https://github.com/alexzendermarunsai/three-man-team-opencode/releases)
 
 ---
 
@@ -53,7 +54,7 @@ The roles map to how real software ships:
 
 ## Quick Start
 
-**How the team runs:** Three Man Team uses one opencode session. Arch is your main agent. When work is ready to build, Arch delegates to Bob as a subagent via opencode's Task tool. When Bob is done, Arch delegates to Richard the same way. You don't open three windows — everything runs inside your single session.
+**How the team runs:** Three Man Team uses one opencode session. Architect is your main agent. When work is ready to build, Architect delegates to Builder as a subagent via opencode's Task tool. When Builder is done, Architect delegates to Reviewer the same way. You don't open three windows — everything runs inside your single session.
 
 Choose your install type:
 
@@ -66,50 +67,47 @@ One project, one install. Clone directly into your project folder.
 **Step 1 — Navigate to your project folder and clone**
 
 ```bash
-git clone https://github.com/russelleNVy/three-man-team.git .opencode/skills/three-man-team
+cd /path/to/your/project
+git clone https://github.com/alexzendermarunsai/three-man-team-opencode.git .opencode/skills/three-man-team
 ```
 
 **Step 2 — Run setup and follow the instructions**
 
 ```bash
-cd .opencode/skills/three-man-team && ./setup
+cd .opencode/skills/three-man-team/templates/project && ./setup project
 ```
 
-Setup takes over from here. It will give you the exact commands to run and tell you how to get started in opencode. Follow what it prints.
+Setup takes over from here. It will give you the exact commands to copy project state files and agent definitions into your project.
 
 ---
 
 ### Global install (all projects)
 
-Install once, use in any project.
+Install once — agents and skills are available in every opencode project automatically via deep-merge. You only copy project state files (handoff, config, VERSION) into each project.
 
-**Step 1 — Clone to your global opencode skills folder**
+**Step 1 — Clone to your global opencode config folder**
 
 ```bash
-git clone https://github.com/russelleNVy/three-man-team.git ~/.config/opencode/skills/three-man-team
-cd ~/.config/opencode/skills/three-man-team && ./setup
+git clone https://github.com/alexzendermarunsai/three-man-team-opencode.git ~/.config/opencode/skills/three-man-team
+cd ~/.config/opencode/skills/three-man-team/templates/project && ./setup global
 ```
 
-That's the one-time install. Setup will confirm everything is in place.
+Setup installs agents into `~/.config/opencode/agents/`, the skill into `~/.config/opencode/skills/`, and merges agent definitions into your global `opencode.json`. It does NOT set `default_agent` or `instructions` globally — those are project-specific.
 
----
-
-**For each project you want to use Three Man Team on:**
-
-**Step 2 — Copy template files into your project, then start opencode**
+**Step 2 — For each project, copy project state files only**
 
 ```bash
-cp -r ~/.config/opencode/skills/three-man-team/templates/project-folder/. /path/to/your/project/
+cp -r ~/.config/opencode/skills/three-man-team/templates/project/. /path/to/your/project/
 cd /path/to/your/project
 ```
+
+opencode automatically deep-merges the global agents + skill into this project. No need to copy agent files per-project.
 
 Start opencode, switch to the architect agent (press Tab), and say:
 
 ```
 Read new-setup.md.
 ```
-
-Arch will handle the rest — project context file, team names, and your first session prompt.
 
 ---
 
@@ -133,17 +131,20 @@ See a complete example from problem to deploy → [`examples/sprint-walkthrough.
 
 Three agents. Three distinct jobs. Built to work together.
 
-Architect, Builder, Reviewer are the defaults. Rename them to anything — Arch will handle it during setup.
+Architect, Builder, Reviewer are the defaults. Rename them to anything — the Architect agent handles it during setup.
 
 ---
 
 ## How It Works Under the Hood
 
-Three Man Team uses opencode's agent system:
+Three Man Team uses opencode's agent system and config deep-merge:
+
 - **Architect** is a `primary` agent — you interact with it directly in your opencode session (press Tab to switch to it).
 - **Builder** and **Reviewer** are `subagent` agents — Architect delegates to them via the Task tool when work needs building or reviewing.
 - All inter-agent communication happens through files in the `handoff/` directory — not through conversation.
-- The `opencode.json` config file routes sessions: it sets `default_agent: "architect"` and defines all three agents with their modes and models.
+- **Global config** (`~/.config/opencode/`) defines the agents and skill — available in every project.
+- **Project config** (`opencode.json` in project root) sets `default_agent`, project-specific `instructions`, and optional model overrides — opencode deep-merges project over global.
+- Per-project install puts agents in `.opencode/agents/` instead — same files, just local to that project.
 
 ---
 
@@ -159,7 +160,7 @@ Output > 20 lines you won't use → Route to subagent.
 About to restate what user said → Delete it.
 ```
 
-The token-optimizer skill ships with every install and auto-loads via opencode.json — no manual setup required.
+The token-optimizer skill ships with every install and auto-loads via opencode's skill system — no manual setup required.
 
 For bash output compression on top of these rules, see [RTK](https://github.com/rtk-ai/rtk) —
 a separate tool that compresses `find`, `ls`, `grep` output before it reaches the model's context.
@@ -172,22 +173,22 @@ See `docs/token-optimization.md` for the full discipline.
 
 ## Auto-Update
 
-Arch checks the GitHub releases API at the start of every session. If a newer version is available, it tells you before doing anything else:
+The Architect checks the GitHub releases API at the start of every session. If a newer version is available, it tells you before doing anything else:
 
-> "Three Man Team v1.2.4 is available — you're on v1.2.3. Before we get into today's work, let me walk you through what changed."
+> "Three Man Team v2.0.1 is available — you're on v2.0.0. Before we get into today's work, let me walk you through what changed."
 
-Arch walks you through each change in plain language and guides you through any updates your project needs. You decide what to apply and when.
+The Architect walks you through each change in plain language and guides you through any updates your project needs. You decide what to apply and when.
 
-See [releases](https://github.com/russelleNVy/three-man-team/releases) for what's changed.
+See [releases](https://github.com/alexzendermarunsai/three-man-team-opencode/releases) for what's changed.
 
 ---
 
 ## Templates
 
-- `templates/project-folder/` — **Start here.** Named personas (Arch, Bob, Richard), fully written and ready to use. Customize the Who You Are sections and rename to fit your team.
-- `templates/generic/` — Blank slate with `[CUSTOMIZE]` placeholders. Use this if you want to build your own personas from scratch or install globally across all projects.
+- `templates/global/` — **Reusable infrastructure.** Agent definitions (architect.md, builder.md, reviewer.md), token-optimizer skill, and agent config for opencode.json. Install at `~/.config/opencode/` for global use, or copy into a project's `.opencode/` for per-project use. Personas have `[CUSTOMIZE]` placeholders — fill them in or let the Architect agent handle it during first setup.
+- `templates/project/` — **Project state.** handoff/ directory, project opencode.json (default_agent + instructions only), VERSION, new-setup.md, PROJECT.md. Copy into each project root. Agent definitions and skills come from global merge or per-project `.opencode/`.
 
-Arch handles renaming during setup — just tell it the new names.
+The Architect handles persona customization during setup — just tell it your names.
 
 ---
 

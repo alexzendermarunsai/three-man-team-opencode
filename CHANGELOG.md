@@ -3,16 +3,18 @@
 ## v2.0.0 — 2026-06-06
 
 - Port: Three Man Team now runs on [opencode](https://opencode.ai) instead of Claude Code
-- Config: `CLAUDE.md` removed, replaced by `opencode.json` and `.opencode/` directory structure
-- Agents: Architect, Builder, and Reviewer now defined as `.opencode/agents/*.md` files with YAML frontmatter (mode, model, description)
+- Config: `CLAUDE.md` removed, replaced by two `opencode.json` files — global (agent defs + skills) and project (default_agent + instructions)
+- Template architecture: `templates/global/` (agents, skills, config for `~/.config/opencode/`) and `templates/project/` (handoff state, project config, VERSION, new-setup.md, PROJECT.md)
+- Deep-merge: opencode merges global config into every project — global install means agents available in all projects, per-project install copies agents into `.opencode/`
+- Agents: Architect, Builder, and Reviewer defined as `agents/*.md` files with YAML frontmatter (mode, model, description) — in `~/.config/opencode/agents/` (global) or `.opencode/agents/` (per-project)
 - Architecture: Architect is a `primary` agent, Builder and Reviewer are `subagent` agents
 - Delegation: Architect delegates to Builder/Reviewer via opencode's Task tool instead of Claude Code's Agent tool
-- Skills: token-optimizer moved to `.opencode/skills/token-optimization/SKILL.md` with proper frontmatter
+- Skills: token-optimizer moved to `skills/token-optimization/SKILL.md` — global or per-project
 - Handoff: `SESSION-CHECKPOINT.md` resume prompt updated for opencode's agent switching (Tab key)
-- Setup: setup script rewritten to copy `.opencode/` structure and `opencode.json` instead of root-level agent files
-- Models: Builder and Reviewer default to `anthropic/claude-sonnet-4-6` (provider-prefix format)
-- Deleted: root-level `CLAUDE.md`, root-level `setup`, `.claude/skills/`, `_temp/`, per-template `ARCHITECT.md`, `BUILDER.md`, `REVIEWER.md`
-- Docs: README, METHODOLOGY, how-it-works, token-optimization, sprint-walkthrough, session-start, INSTALL all updated for opencode
+- Setup: setup script rewritten with `project` and `global` modes instead of auto-detect logic
+- Models: Builder and Reviewer default to `anthropic/claude-sonnet-4-6` (provider-prefix format). Model overrides go in project-level `opencode.json`.
+- Deleted: `templates/generic/` (replaced by `templates/global/`), `templates/project-folder/` (renamed to `templates/project/`), root-level `CLAUDE.md`, root-level `setup`, `.claude/skills/`, `_temp/`, per-template `ARCHITECT.md`, `BUILDER.md`, `REVIEWER.md`
+- Docs: README, INSTALL, CREDITS, METHODOLOGY, how-it-works, token-optimization, sprint-walkthrough, session-start, index.html all updated for opencode and deep-merge architecture
 
 ## v1.2.5 — 2026-06-04
 
