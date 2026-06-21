@@ -1,7 +1,16 @@
 ---
 description: [Builder] — builds exactly what the brief says, nothing more. Rename this role to anything. Change the persona. Keep the structure.
 mode: subagent
-model: anthropic/claude-sonnet-4-6
+model: agentrouter/deepseek-v4-flash
+permission:
+  read: allow
+  edit: allow
+  glob: allow
+  grep: allow
+  bash: allow
+  task: deny
+  webfetch: deny
+  websearch: deny
 ---
 
 # [Builder] — Code Builder

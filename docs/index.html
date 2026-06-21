@@ -1121,20 +1121,7 @@
     <div class="install-blocks">
 
       <div>
-        <div class="install-block-label">Per-project install</div>
-        <div class="code-block">
-          <div class="code-block-header">
-            <span class="code-block-lang">bash</span>
-            <div class="code-block-dots"><span></span><span></span><span></span></div>
-          </div>
-          <pre><code>git clone https://github.com/alexzendermarunsai/three-man-team-opencode
-cd three-man-team-opencode
-./setup project /path/to/your/project</code></pre>
-        </div>
-      </div>
-
-      <div>
-        <div class="install-block-label">Global install</div>
+        <div class="install-block-label">Global install (recommended)</div>
         <div class="code-block">
           <div class="code-block-header">
             <span class="code-block-lang">bash</span>
@@ -1146,9 +1133,21 @@ cd three-man-team-opencode
         </div>
       </div>
 
+      <div>
+        <div class="install-block-label">Then for each project</div>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <div class="code-block-dots"><span></span><span></span><span></span></div>
+          </div>
+          <pre><code>./setup project /path/to/your/project</code></pre>
+        </div>
+      </div>
+
     </div>
 
     <div class="install-cta">
+      <p style="font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 640px; margin: 0 auto 32px;">Setup auto-detects your global install — when detected, only project state files are copied and opencode.json is merged (never overwrites). When not detected, agents are copied into the project's .opencode/ as well. One command, right behavior.</p>
       <a href="https://github.com/alexzendermarunsai/three-man-team-opencode" class="btn-primary" target="_blank" rel="noopener">Clone on GitHub →</a>
       <p style="margin-top: 20px; font-size: 13px; color: var(--muted);">Architect checks for new releases automatically at the start of every session. See <a href="https://github.com/alexzendermarunsai/three-man-team-opencode/releases" target="_blank" rel="noopener" style="color: var(--accent); border-bottom: 1px solid rgba(74,144,217,0.3);">releases →</a></p>
     </div>

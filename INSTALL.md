@@ -16,21 +16,21 @@ cd three-man-team-opencode
 
 ---
 
-## Per-project install (recommended)
+## Per-project install (single project only)
 
-One project, one install. Agents and skills go into the project's `.opencode/` directory.
+If you haven't done a global install, agents and skills go into the project's `.opencode/` directory.
 
 ```bash
 ./setup project /path/to/your/project
 ```
 
-Setup copies project state files (handoff, opencode.json, VERSION, new-setup.md, PROJECT.md) and agent definitions into the target project's `.opencode/`. Then start opencode and switch to the architect agent.
+Setup auto-detects whether a global install exists and adjusts what it copies. When a global install is found (`~/.config/opencode/agents/architect.md` exists), it only copies project state files + merges `opencode.json` — agents come from global merge. When not found, it copies agents + skills into `.opencode/` as well. One command, right behavior.
 
 ---
 
-## Global install (all projects)
+## Global install (recommended for multi-project use)
 
-Install once — agents and skill go into `~/.config/opencode/` and are available in every opencode project automatically via deep-merge. You only copy project state files into each project.
+Install once — agents and skill go into `~/.config/opencode/` and are available in every opencode project via deep-merge.
 
 ```bash
 ./setup global
@@ -46,13 +46,7 @@ If you already have a global `opencode.json`, setup prints the keys to merge —
 ./setup project /path/to/your/project
 ```
 
-Or manually copy only the project state files (no agents needed — they come from global merge):
-
-```bash
-cp -r templates/project/. /path/to/your/project/
-```
-
-opencode automatically deep-merges the global agents + skill into this project. Switch to the architect agent (press Tab) and say: `Read new-setup.md.`
+Setup auto-detects your global install. When detected, it only copies project state files + merges `opencode.json` — agents come from global merge. When not detected, it copies agents + skills into `.opencode/` as well. Either way, one command does the right thing.
 
 ---
 
@@ -82,13 +76,15 @@ git pull
 
 | File | Location | Purpose |
 |---|---|---|
-| `opencode.json` | project root | `default_agent`, `instructions`, optional model overrides |
+| `opencode.json` | project root | `default_agent` + `instructions` (merged, never overwrites existing config) |
 | `handoff/` (5 files) | project root | Inter-agent communication |
 | `VERSION` | project root | Version tracker for auto-update |
 | `new-setup.md` | project root | First-time setup instructions (delete after first session) |
 | `PROJECT.md` | project root | Project context placeholder |
 
-### Per-project install also adds
+### Per-project install also adds (only when no global install detected)
+
+When `~/.config/opencode/agents/architect.md` does NOT exist, setup copies agents + skill into `.opencode/`:
 
 | File | Location | Purpose |
 |---|---|---|
@@ -96,6 +92,24 @@ git pull
 | `.opencode/agents/builder.md` | project `.opencode/` | Builder agent (overrides global if both exist) |
 | `.opencode/agents/reviewer.md` | project `.opencode/` | Reviewer agent (overrides global if both exist) |
 | `.opencode/skills/token-optimization/SKILL.md` | project `.opencode/` | Token discipline (overrides global if both exist) |
+
+---
+
+## Auto-Detect Behavior
+
+`./setup project <path>` checks whether a global install exists by looking for `~/.config/opencode/agents/architect.md`:
+
+| Global install detected? | What setup copies | opencode.json behavior |
+|---|---|---|
+| **Yes** | Project state files only (handoff, VERSION, new-setup.md, PROJECT.md) | Merges `default_agent` + `instructions` into existing config — never overwrites other keys |
+| **No** | Project state files + agents + skill into `.opencode/` | Creates or merges `opencode.json` same way |
+
+The opencode.json merge uses Python to:
+1. Add `default_agent: "architect"` if not already set
+2. Append Three Man Team `instructions` (deduplicated, preserves existing order)
+3. Preserve all other keys (model, provider, MCP servers, etc.)
+
+If Python3 is not available, setup prints the keys to add manually.
 
 ---
 

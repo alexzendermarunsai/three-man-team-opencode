@@ -63,45 +63,39 @@ git clone https://github.com/alexzendermarunsai/three-man-team-opencode.git
 cd three-man-team-opencode
 ```
 
-Choose your install type:
-
 ---
 
-### Per-project install (recommended)
+### Global install (recommended for multi-project use)
 
-One project, one install. Agents and skills go into the project's `.opencode/` directory.
-
-```bash
-./setup project /path/to/your/project
-```
-
-Setup copies project state files (handoff, opencode.json, VERSION, new-setup.md, PROJECT.md) and agent definitions into the target project. Then start opencode and switch to the architect agent.
-
----
-
-### Global install (all projects)
-
-Install once — agents and skill go into `~/.config/opencode/` and are available in every opencode project automatically via deep-merge. You only copy project state files into each project.
+Install once — agents and skill go into `~/.config/opencode/` and are available in every opencode project via deep-merge.
 
 ```bash
 ./setup global
 ```
 
-Setup copies agents into `~/.config/opencode/agents/`, the skill into `~/.config/opencode/skills/`, and merges agent definitions into your global `opencode.json`. It does NOT set `default_agent` or `instructions` globally — those are project-specific.
-
-**For each project you want to use Three Man Team on:**
+Then for each project, setup auto-detects your global install and only copies project state files + merges `opencode.json` (never overwrites existing project config):
 
 ```bash
 ./setup project /path/to/your/project
 ```
 
-Or manually copy only the project state files (no agents needed — they come from global merge):
+---
+
+### Per-project install (single project only)
+
+If you haven't done a global install, the same command copies everything including agents into the project's `.opencode/`:
 
 ```bash
-cp -r templates/project/. /path/to/your/project/
+./setup project /path/to/your/project
 ```
 
-opencode automatically deep-merges the global agents + skill into this project. Start opencode, switch to the architect agent (press Tab), and say:
+Setup auto-detects whether a global install exists and adjusts what it copies. No need to think about which mode you're in — one command does the right thing.
+
+---
+
+### Starting a session
+
+After setup, run `opencode` in your project, switch to the architect agent (press Tab), and say:
 
 ```
 Read new-setup.md.
@@ -114,7 +108,7 @@ Read new-setup.md.
 ```bash
 git pull
 ./setup global        # re-deploy global agents + skill
-./setup project /path/to/project  # re-deploy per-project files
+./setup project /path/to/project  # re-deploy project files + merge opencode.json
 ```
 
 ## The Workflow

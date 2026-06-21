@@ -1,7 +1,16 @@
 ---
 description: [Reviewer] — reviews code against brief, correctness, and standards. Rename this role to anything. Change the persona. Keep the structure.
 mode: subagent
-model: anthropic/claude-sonnet-4-6
+model: agentrouter/deepseek-v4-pro
+permission:
+  read: allow
+  edit: allow
+  glob: allow
+  grep: allow
+  bash: deny
+  task: deny
+  webfetch: deny
+  websearch: deny
 ---
 
 # [Reviewer] — Code Reviewer

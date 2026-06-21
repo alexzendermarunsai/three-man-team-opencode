@@ -21,7 +21,7 @@ if [ -z "$MODE" ]; then
   echo "Choose install type:"
   echo ""
   echo "  1) global    — Install agents & skill into ~/.config/opencode/ (available in ALL projects)"
-  echo "  2) project   — Copy all files into a specific project directory"
+  echo "  2) project   — Copy files into a specific project directory"
   echo ""
   read -p "Enter 1 or 2: " CHOICE
   if [ "$CHOICE" = "1" ]; then
@@ -35,6 +35,206 @@ if [ -z "$MODE" ]; then
   fi
 fi
 
+# ─── Helper: merge Three Man Team keys into an opencode.json ───
+merge_opencode_json() {
+  local TARGET_DIR="$1"
+  local OC_FILE="$TARGET_DIR/opencode.json"
+
+  if [ ! -f "$OC_FILE" ]; then
+    # No existing config — create minimal one
+    cat > "$OC_FILE" << 'OCJSON'
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "architect",
+  "instructions": [
+    "handoff/SESSION-CHECKPOINT.md",
+    "PROJECT.md"
+  ]
+}
+OCJSON
+    echo "  Created $OC_FILE (default_agent: architect, instructions: handoff + PROJECT.md)"
+    return
+  fi
+
+  # Existing config — merge keys safely using Python
+  python3 -c "
+import json, sys
+
+oc_path = '$OC_FILE'
+
+try:
+    with open(oc_path, 'r') as f:
+        config = json.load(f)
+except Exception as e:
+    print(f'  ERROR: Could not read $OC_FILE: {e}', file=sys.stderr)
+    sys.exit(1)
+
+# Add default_agent if not already set
+if 'default_agent' not in config:
+    config['default_agent'] = 'architect'
+
+# Append instructions (deduplicated, preserve existing order)
+existing_instructions = config.get('instructions', [])
+tmt_instructions = ['handoff/SESSION-CHECKPOINT.md', 'PROJECT.md']
+for inst in tmt_instructions:
+    if inst not in existing_instructions:
+        existing_instructions.append(inst)
+config['instructions'] = existing_instructions
+
+with open(oc_path, 'w') as f:
+    json.dump(config, f, indent=2)
+    f.write('\n')
+
+print(f'  Merged Three Man Team keys into $OC_FILE')
+print(f'    default_agent: {config.get(\"default_agent\")}')
+print(f'    instructions: {config.get(\"instructions\")}')
+" 2>&1
+
+  if [ $? -ne 0 ]; then
+    echo "  WARNING: Python3 not available or JSON merge failed."
+    echo "  Manually add these keys to $OC_FILE:"
+    echo ""
+    echo '    "default_agent": "architect"'
+    echo '    "instructions": ["handoff/SESSION-CHECKPOINT.md", "PROJECT.md"]'
+    echo ""
+    echo "  Append to instructions if they already exist. Don't overwrite other keys."
+  fi
+}
+
+# ─── Helper: merge Three Man Team agent definitions into an opencode.json ───
+merge_agents_json() {
+  local TARGET_DIR="$1"
+  local OC_FILE="$TARGET_DIR/opencode.json"
+
+  python3 -c "
+import json, sys
+
+oc_path = '$OC_FILE'
+
+try:
+    with open(oc_path, 'r') as f:
+        config = json.load(f)
+except Exception as e:
+    print(f'  ERROR: Could not read $OC_FILE: {e}', file=sys.stderr)
+    sys.exit(1)
+
+# Three Man Team agent definitions with permissions
+tmt_agents = {
+    'architect': {
+        'description': '[Architect] — plans, directs Builder and Reviewer, owns the deploy gate.',
+        'mode': 'primary',
+        'permission': {
+            'read': 'allow',
+            'edit': 'allow',
+            'glob': 'allow',
+            'grep': 'allow',
+            'bash': 'allow',
+            'task': 'allow',
+            'webfetch': 'allow',
+            'websearch': 'allow'
+        }
+    },
+    'builder': {
+        'description': '[Builder] — builds exactly what the brief says, nothing more.',
+        'mode': 'subagent',
+        'model': 'agentrouter/deepseek-v4-flash',
+        'permission': {
+            'read': 'allow',
+            'edit': 'allow',
+            'glob': 'allow',
+            'grep': 'allow',
+            'bash': 'allow',
+            'task': 'deny',
+            'webfetch': 'deny',
+            'websearch': 'deny'
+        }
+    },
+    'reviewer': {
+        'description': '[Reviewer] — reviews code against brief, correctness, and standards.',
+        'mode': 'subagent',
+        'model': 'agentrouter/deepseek-v4-pro',
+        'permission': {
+            'read': 'allow',
+            'edit': 'allow',
+            'glob': 'allow',
+            'grep': 'allow',
+            'bash': 'deny',
+            'task': 'deny',
+            'webfetch': 'deny',
+            'websearch': 'deny'
+        }
+    }
+}
+
+# Merge agents (only add if not already defined — don't overwrite user's custom agents)
+if 'agent' not in config:
+    config['agent'] = {}
+
+added = []
+updated = []
+for name, definition in tmt_agents.items():
+    if name not in config['agent']:
+        config['agent'][name] = definition
+        added.append(name)
+    else:
+        # Agent exists — update permissions and description, preserve user's model if set
+        existing = config['agent'][name]
+        if 'permission' not in existing:
+            existing['permission'] = definition['permission']
+            updated.append(name)
+        if 'description' not in existing:
+            existing['description'] = definition['description']
+
+with open(oc_path, 'w') as f:
+    json.dump(config, f, indent=2)
+    f.write('\n')
+
+if added:
+    print(f'  Added agents: {', '.join(added)}')
+if updated:
+    print(f'  Updated permissions for: {', '.join(updated)}')
+if not added and not updated:
+    print(f'  All Three Man Team agents already defined — skipping')
+print(f'  Agent definitions merged into $OC_FILE')
+" 2>&1
+
+  if [ $? -ne 0 ]; then
+    echo "  WARNING: Python3 not available or merge failed."
+    echo ""
+    echo "  Manually add these agent definitions to $OC_FILE:"
+    echo ""
+    echo '  "agent": {'
+    echo '    "architect": {'
+    echo '      "description": "[Architect] — plans, directs Builder and Reviewer, owns the deploy gate.",'
+    echo '      "mode": "primary",'
+    echo '      "permission": {'
+    echo '        "read": "allow", "edit": "allow", "glob": "allow", "grep": "allow",'
+    echo '        "bash": "allow", "task": "allow", "webfetch": "allow", "websearch": "allow"'
+    echo '      }'
+    echo '    },'
+    echo '    "builder": {'
+    echo '      "description": "[Builder] — builds exactly what the brief says, nothing more.",'
+    echo '      "mode": "subagent",'
+    echo '      "model": "agentrouter/deepseek-v4-flash",'
+    echo '      "permission": {'
+    echo '        "read": "allow", "edit": "allow", "glob": "allow", "grep": "allow",'
+    echo '        "bash": "allow", "task": "deny", "webfetch": "deny", "websearch": "deny"'
+    echo '      }'
+    echo '    },'
+    echo '    "reviewer": {'
+    echo '      "description": "[Reviewer] — reviews code against brief, correctness, and standards.",'
+    echo '      "mode": "subagent",'
+    echo '      "model": "agentrouter/deepseek-v4-pro",'
+    echo '      "permission": {'
+    echo '        "read": "allow", "edit": "allow", "glob": "allow", "grep": "allow",'
+    echo '        "bash": "deny", "task": "deny", "webfetch": "deny", "websearch": "deny"'
+    echo '      }'
+    echo '    }'
+    echo '  }'
+  fi
+}
+
+# ─── GLOBAL INSTALL ───
 if [ "$MODE" = "global" ]; then
   echo "Global install — agents and skill available in ALL opencode projects via deep-merge."
   echo ""
@@ -72,21 +272,14 @@ if [ "$MODE" = "global" ]; then
     echo "  You already have a global opencode.json at:"
     echo "    $GLOBAL_CONFIG"
     echo ""
-    echo "  Three Man Team needs to add agent definitions to your config."
-    echo "  opencode auto-discovers skills from ~/.config/opencode/skills/ — no skills.paths config needed."
+    echo "  Three Man Team is merging agent definitions into your config..."
     echo ""
-    echo "  Merge these keys into your existing config:"
+    merge_agents_json "$GLOBAL_DIR"
     echo ""
-    echo '  "agent": {'
-    echo '    "architect": { "mode": "primary" },'
-    echo '    "builder": { "mode": "subagent", "model": "anthropic/claude-sonnet-4-6" },'
-    echo '    "reviewer": { "mode": "subagent", "model": "anthropic/claude-sonnet-4-6" }'
-    echo '  }'
+    echo "  Skills are auto-discovered from ~/.config/opencode/skills/ — no config needed."
     echo ""
     echo "  IMPORTANT: Do NOT add default_agent or instructions at the global level."
     echo "  Those are project-specific and belong in each project's opencode.json."
-    echo ""
-    echo "  See the template at: $TEMPLATE_GLOBAL/opencode.json"
   else
     cp "$TEMPLATE_GLOBAL/opencode.json" "$GLOBAL_CONFIG"
     echo "  Created $GLOBAL_CONFIG with agent definitions."
@@ -107,13 +300,11 @@ if [ "$MODE" = "global" ]; then
   echo ""
   echo "  ./setup project /path/to/your/project"
   echo ""
-  echo "  Or manually copy project state files:"
-  echo ""
-  echo "  cp -r $TEMPLATE_PROJECT/. /path/to/your/project/"
-  echo ""
-  echo "  Then start opencode, switch to the architect agent (press Tab), and say: Read new-setup.md."
+  echo "  This will auto-detect your global install and only copy project state files."
+  echo "  Switch to the architect agent (press Tab) and say: Read new-setup.md."
   echo ""
 
+# ─── PROJECT INSTALL ───
 elif [ "$MODE" = "project" ]; then
   if [ -z "$TARGET" ]; then
     echo "Usage: ./setup project /path/to/your/project"
@@ -123,50 +314,91 @@ elif [ "$MODE" = "project" ]; then
   fi
 
   # Resolve target path
-  TARGET="$(cd "$TARGET" 2>/dev/null && pwd)" || TARGET="$TARGET"
+  if [ -d "$TARGET" ]; then
+    TARGET="$(cd "$TARGET" && pwd)"
+  fi
 
-  echo "Per-project install — target: $TARGET"
+  # Auto-detect: check if global install exists
+  GLOBAL_AGENTS="$HOME/.config/opencode/agents/architect.md"
+  if [ -f "$GLOBAL_AGENTS" ]; then
+    GLOBAL_DETECTED=true
+    echo "Global install detected — agents come from ~/.config/opencode/ merge."
+  else
+    GLOBAL_DETECTED=false
+    echo "No global install detected — agents will be copied into project's .opencode/"
+  fi
   echo ""
 
-  # Step 1 — Copy project state files
+  # Step 1 — Copy project state files (always safe to copy)
   echo "-----------------------------------------"
   echo "  Step 1 — Copy project state files"
   echo "-----------------------------------------"
   echo ""
 
-  cp -r "$TEMPLATE_PROJECT/." "$TARGET/"
+  # Copy specific files, not cp -r (which would include opencode.json if it existed)
+  mkdir -p "$TARGET/handoff"
+  cp "$TEMPLATE_PROJECT/handoff/SESSION-CHECKPOINT.md" "$TARGET/handoff/"
+  cp "$TEMPLATE_PROJECT/handoff/ARCHITECT-BRIEF.md" "$TARGET/handoff/"
+  cp "$TEMPLATE_PROJECT/handoff/BUILD-LOG.md" "$TARGET/handoff/"
+  cp "$TEMPLATE_PROJECT/handoff/REVIEW-REQUEST.md" "$TARGET/handoff/"
+  cp "$TEMPLATE_PROJECT/handoff/REVIEW-FEEDBACK.md" "$TARGET/handoff/"
+  cp "$TEMPLATE_PROJECT/VERSION" "$TARGET/"
+  cp "$TEMPLATE_PROJECT/new-setup.md" "$TARGET/"
+  cp "$TEMPLATE_PROJECT/PROJECT.md" "$TARGET/" 2>/dev/null  # PROJECT.md may already exist
 
   echo "  Copied project state files to $TARGET/:"
-  echo "    opencode.json, handoff/, VERSION, new-setup.md, PROJECT.md"
+  echo "    handoff/ (5 files), VERSION, new-setup.md"
+  if [ ! -f "$TARGET/PROJECT.md" ]; then
+    echo "    PROJECT.md (new)"
+  else
+    echo "    PROJECT.md (preserved existing)"
+  fi
   echo ""
 
-  # Step 2 — Copy agents and skill into project's .opencode/
+  # Step 2 — Merge opencode.json (never overwrites)
   echo "-----------------------------------------"
-  echo "  Step 2 — Copy agents & skill into .opencode/"
+  echo "  Step 2 — Configure opencode.json"
   echo "-----------------------------------------"
   echo ""
 
-  mkdir -p "$TARGET/.opencode/agents" "$TARGET/.opencode/skills/token-optimization"
-
-  cp "$TEMPLATE_GLOBAL/agents/architect.md" "$TARGET/.opencode/agents/architect.md"
-  cp "$TEMPLATE_GLOBAL/agents/builder.md" "$TARGET/.opencode/agents/builder.md"
-  cp "$TEMPLATE_GLOBAL/agents/reviewer.md" "$TARGET/.opencode/agents/reviewer.md"
-  cp "$TEMPLATE_GLOBAL/skills/token-optimization/SKILL.md" "$TARGET/.opencode/skills/token-optimization/SKILL.md"
-
-  echo "  Copied agent and skill files to $TARGET/.opencode/:"
-  echo "    .opencode/agents/architect.md, builder.md, reviewer.md"
-  echo "    .opencode/skills/token-optimization/SKILL.md"
+  merge_opencode_json "$TARGET"
   echo ""
 
-  # Note about global install
-  echo "  NOTE: If you later switch to a global install, you can delete"
-  echo "  $TARGET/.opencode/agents/ and $TARGET/.opencode/skills/"
-  echo "  — opencode will use the global agents from ~/.config/opencode/ instead."
-  echo ""
+  # Step 3 — Copy agents and skill (only if no global install)
+  if [ "$GLOBAL_DETECTED" = false ]; then
+    echo "-----------------------------------------"
+    echo "  Step 3 — Copy agents & skill into .opencode/"
+    echo "-----------------------------------------"
+    echo ""
 
-  # Step 3 — Start session
+    mkdir -p "$TARGET/.opencode/agents" "$TARGET/.opencode/skills/token-optimization"
+
+    cp "$TEMPLATE_GLOBAL/agents/architect.md" "$TARGET/.opencode/agents/architect.md"
+    cp "$TEMPLATE_GLOBAL/agents/builder.md" "$TARGET/.opencode/agents/builder.md"
+    cp "$TEMPLATE_GLOBAL/agents/reviewer.md" "$TARGET/.opencode/agents/reviewer.md"
+    cp "$TEMPLATE_GLOBAL/skills/token-optimization/SKILL.md" "$TARGET/.opencode/skills/token-optimization/SKILL.md"
+
+    echo "  Copied agent and skill files to $TARGET/.opencode/:"
+    echo "    .opencode/agents/architect.md, builder.md, reviewer.md"
+    echo "    .opencode/skills/token-optimization/SKILL.md"
+    echo ""
+  else
+    echo "-----------------------------------------"
+    echo "  Step 3 — Agents & skill"
+    echo "-----------------------------------------"
+    echo ""
+    echo "  Skipped — agents and skill come from global merge (~/.config/opencode/)."
+    echo "  opencode deep-merges global agents into this project automatically."
+    echo ""
+    echo "  To override agents locally for this project only, manually copy into:"
+    echo "    $TARGET/.opencode/agents/"
+    echo "  Project-level agents override same-name global agents."
+    echo ""
+  fi
+
+  # Step 4 — Start session
   echo "-----------------------------------------"
-  echo "  Step 3 — Start your first session"
+  echo "  Start your first session"
   echo "-----------------------------------------"
   echo ""
   echo "  1. cd $TARGET"
@@ -182,7 +414,7 @@ else
   echo "Usage: ./setup [global|project <path>]"
   echo ""
   echo "  global            — Install agents & skill into ~/.config/opencode/ (all projects)"
-  echo "  project <path>    — Copy all files into the target project directory"
+  echo "  project <path>    — Copy files into the target project directory"
   echo ""
   echo "  Run ./setup with no arguments for interactive mode."
   exit 1
